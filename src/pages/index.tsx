@@ -48,32 +48,8 @@ export const getStaticProps: Props = () => {
 export default function Home({ data }) {
   return (
     <div className="flex">
-      <Sidebar />
-      <div className="container mx-auto mt-12">
-        {/* <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
-            <div className="truncate text-sm font-medium text-gray-500">
-              Total users
-            </div>
-            <div className="mt-1 text-3xl font-semibold text-gray-900">
-              12,00
-            </div>
-          </div>
-          <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
-            <div className="truncate text-sm font-medium text-gray-500">
-              Total Profit
-            </div>
-            <div className="mt-1 text-3xl font-semibold text-gray-900">
-              $ 450k
-            </div>
-          </div>
-          <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
-            <div className="truncate text-sm font-medium text-gray-500">
-              Total Orders
-            </div>
-            <div className="mt-1 text-3xl font-semibold text-gray-900">20k</div>
-          </div>
-        </div> */}
+      <div className=" w-full">
+        <p className="border-b pb-3 text-5xl font-medium">Dashboard</p>
         <DataTable columns={columns} data={data} />
       </div>
     </div>

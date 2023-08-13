@@ -22,6 +22,7 @@ import {
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,7 +55,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Filter products..."
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
@@ -63,6 +64,9 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <Button>
+          <Link href="/products/new">New Product</Link>
+        </Button>
       </div>
       <div className="rounded-md border">
         <Table>
