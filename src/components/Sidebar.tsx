@@ -24,7 +24,7 @@ export default function Sidebar() {
                 href="/"
                 className="flex items-center space-x-3 rounded-md p-2">
                 <HomeIocn />
-                <span className="text-gray-100">Overview</span>
+                <span className="text-gray-100">Dashboard</span>
               </a>
             </li>
             <span className="px-6 py-4 text-[0.6rem] font-bold uppercase text-gray-400 dark:text-gray-400">
@@ -32,10 +32,10 @@ export default function Sidebar() {
             </span>
             <li className="rounded-sm">
               <a
-                href="/products/new"
+                href="/products"
                 className="flex items-center space-x-3 rounded-md p-2">
                 <ProductsIcon />
-                <span className="text-gray-100">New Product</span>
+                <span className="text-gray-100">Products</span>
               </a>
             </li>
             <li className="rounded-s4">
