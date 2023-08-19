@@ -1,6 +1,7 @@
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 import { Product } from '~/types/Product';
 import FeaturedProducts from '~/components/FeaturedProducts/FeaturedProducts';
+import HeroEditor from '~/components/HeroEditor';
 
 export const getStaticProps: GetStaticProps<{ data: Product[] }> = () => {
   return {
@@ -68,6 +69,7 @@ export default function Home({
     <div className="flex">
       <div className=" w-full">
         <p className="border-b pb-3 text-5xl font-medium">Dashboard</p>
+        <HeroEditor />
         <FeaturedProducts data={data} />
       </div>
     </div>

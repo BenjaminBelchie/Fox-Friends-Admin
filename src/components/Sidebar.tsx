@@ -10,7 +10,7 @@ export default function Sidebar() {
   return (
     <div
       className={
-        'flex h-screen w-80 flex-col bg-gray-800 p-3 shadow duration-300'
+        'fixed flex h-screen w-72 flex-col overflow-x-hidden bg-gray-800 p-3 shadow duration-300'
       }>
       <div className="space-y-3">
         <div className="ml-2 flex items-center gap-3">

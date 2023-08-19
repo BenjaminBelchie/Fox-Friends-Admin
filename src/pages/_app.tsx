@@ -19,8 +19,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <title>Fox & Friends Admin</title>
       </Head>
       <Provider store={store}>
-        <div className="flex w-screen">
-          <Sidebar />
+        <div className="flex w-full">
+          <div className="w-[340px]">
+            <Sidebar />
+          </div>
           <div className="w-full px-12 py-8">
             <SessionProvider session={session}>
               <Component {...pageProps} />
