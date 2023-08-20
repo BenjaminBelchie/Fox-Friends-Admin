@@ -1,11 +1,11 @@
 import Lottie from 'react-lottie-player';
 import lottieJson from '~/constants/animations/bear-animation.json';
 
-export default function OrdersPage() {
+export default function SettingsPage() {
   return (
     <div className="flex">
       <div className=" w-full">
-        <p className="border-b pb-3 text-5xl font-medium">Orders</p>
+        <p className="border-b pb-3 text-5xl font-medium">Settings</p>
         <div className="flex flex-col items-center justify-center">
           <Lottie
             loop
