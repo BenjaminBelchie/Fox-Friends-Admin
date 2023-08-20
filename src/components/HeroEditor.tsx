@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { Check, X } from 'lucide-react';
@@ -9,14 +9,35 @@ import {
   TooltipTrigger,
 } from './ui/tooltip';
 import { useToast } from './ui/use-toast';
+import { Input } from './ui/input';
+import TextField from './ui/text-field';
+
+const primaryInitText = 'Artisanal Crochet Goods';
+const secondaryInitText = 'Handmade to Order in the UK';
 
 export default function HeroEditor() {
   const [file, setFile] = useState<File | null>(null);
+  const [primaryHeroText, setPrimaryHeroText] = useState(primaryInitText);
+  const [secondaryHeroText, setSecondaryHeroText] = useState(secondaryInitText);
   const { toast } = useToast();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files[0]);
   };
+
+  const hasHeroTextChanged = () => {
+    if (
+      primaryHeroText !== primaryInitText ||
+      secondaryHeroText !== secondaryInitText
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  useEffect(() => {
+    hasHeroTextChanged();
+  }, [primaryHeroText, secondaryHeroText]);
 
   return (
     <div>
@@ -27,49 +48,63 @@ export default function HeroEditor() {
       </p>
       {file ? (
         <div
-          className="flex h-[401px] w-full justify-between bg-cover bg-center p-4"
+          className=" h-[401px] w-full bg-cover bg-center p-4"
           style={{
-            backgroundImage: `url(${URL.createObjectURL(file)})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(${URL.createObjectURL(
+              file,
+            )})`,
           }}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => {
-                    setFile(null);
-                  }}
-                  className="bg-red-500 hover:bg-red-400"
-                  size="icon">
-                  <X className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent align="start">
-                <p>Reset Image</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => {
-                    setFile(null);
-                    toast({
-                      title: 'Saved ✔',
-                      description: 'Hero image updated successfully',
-                      variant: 'success',
-                    });
-                  }}
-                  className="bg-green-600 hover:bg-green-500"
-                  size="icon">
-                  <Check className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent align="end">
-                <p>Save Image</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div className=" flex justify-between">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setFile(null);
+                    }}
+                    className="bg-red-500 hover:bg-red-400"
+                    size="icon">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent align="start">
+                  <p>Reset Image</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setFile(null);
+                      toast({
+                        title: 'Saved ✔',
+                        description: 'Hero image updated successfully',
+                        variant: 'success',
+                      });
+                    }}
+                    className="bg-green-600 hover:bg-green-500"
+                    size="icon">
+                    <Check className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent align="end">
+                  <p>Save Image</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <div className="flex h-full w-full  flex-col justify-center">
+            <div className="flex -translate-y-16 flex-col items-center">
+              <p className="text-6xl font-bold uppercase text-white">
+                {primaryHeroText}
+              </p>
+              <p className="text-4xl font-bold uppercase text-green-200">
+                {secondaryHeroText}
+              </p>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex w-full items-center justify-center">
@@ -85,9 +120,9 @@ export default function HeroEditor() {
                 viewBox="0 0 20 16">
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                 />
               </svg>
@@ -108,6 +143,28 @@ export default function HeroEditor() {
           </label>
         </div>
       )}
+      <div className="flex flex-col gap-2 pt-4">
+        <p>You can also change the text overlayed on the hero image</p>
+        <TextField
+          value={primaryHeroText}
+          setValue={setPrimaryHeroText}
+          htmlId="primary-hero-text"
+          inputType="text"
+          showLabel={true}
+          lableText="Primary Hero Text"
+        />
+        <TextField
+          value={secondaryHeroText}
+          setValue={setSecondaryHeroText}
+          htmlId="secondary-hero-text"
+          inputType="text"
+          showLabel={true}
+          lableText="Secondary Text"
+        />
+        {hasHeroTextChanged() && (
+          <Button className="w-fit">Save Hero Text</Button>
+        )}
+      </div>
     </div>
   );
 }

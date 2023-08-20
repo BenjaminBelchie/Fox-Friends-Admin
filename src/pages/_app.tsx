@@ -5,7 +5,6 @@ import { Toaster } from '~/components/ui/toaster';
 import Head from 'next/head';
 import '~/styles/globals.css';
 import Sidebar from '~/components/Sidebar';
-import { useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { store } from '~/redux/store';
 
