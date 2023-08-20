@@ -1,7 +1,14 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Button } from '~/components/ui/button';
+import TextArea from '~/components/ui/text-area';
+import TextField from '~/components/ui/text-field';
+import { PoundSignIcon } from '~/constants/icons';
 
 export default function NewProducts() {
+  const [productTitle, setProductTitle] = useState('');
+  const [shortDescription, setShortDescription] = useState('');
+  const [longDescription, setLongDescription] = useState('');
+  const [productPrice, setProductPrice] = useState('');
   const [files, setFiles] = useState<FileList | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -15,69 +22,43 @@ export default function NewProducts() {
         <div className="mt-4">
           <form>
             <div className="flex flex-col gap-4">
-              <div>
-                <label
-                  htmlFor="product-title"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Product Title
-                </label>
-                <input
-                  type="text"
-                  id="product-title"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="Crochet Bear"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="product-title"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Short Description
-                </label>
-                <textarea
-                  id="product-title"
-                  rows={4}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="Introducing our Handmade Crochet Bear, a charming and huggable companion that brings warmth and nostalgia to your life. Crafted with love and care, each bear is meticulously crocheted by skilled artisans, ensuring a unique and one-of-a-kind creation."
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="product-title"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Long Description
-                </label>
-                <textarea
-                  id="product-title"
-                  rows={4}
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                  placeholder="Introducing our Handmade Crochet Bear, a charming and huggable companion that brings warmth and nostalgia to your life. Crafted with love and care, each bear is meticulously crocheted by skilled artisans, ensuring a unique and one-of-a-kind creation. Made from soft, high-quality yarn, this crochet bear boasts a cozy texture that invites cuddles and embraces. Its intricate details, from the adorable button eyes to the carefully stitched nose, give it a delightful personality that appeals to all ages. Whether you're looking for a cherished gift for a loved one or a whimsical addition to your home decor, our Handmade Crochet Bear is a heartwarming choice. Capture the essence of handmade craftsmanship and the comfort of a classic teddy bear with our meticulously designed crochet creation. Cherish the beauty of tradition and the joy of a truly special companion with our Handmade Crochet Bear."
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="product-price-icon"
-                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
-                  Product Price
-                </label>
-                <div className="relative">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
-                    <svg
-                      className="h-4 w-4 text-gray-500 dark:text-gray-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24">
-                      <path d="M18.85187,19.47723a.30631.30631,0,0,0-.39649-.15A8.07605,8.07605,0,0,1,15.60645,20a5.59582,5.59582,0,0,1-1.86768-.39746,9.68262,9.68262,0,0,0-2.90051-.597.1641.1641,0,0,1-.14826-.23449A8.6317,8.6317,0,0,0,11.60645,15c0-.1723-.005-.33441-.00824-.5h3.7387a.26958.26958,0,0,0,.26954-.26959V11.76953A.26953.26953,0,0,0,15.33691,11.5H11.59a.272.272,0,0,1-.26551-.23358c-.0946-.64075-.20154-1.23389-.30444-1.79572a19.22134,19.22134,0,0,1-.41266-3.32824A2.09021,2.09021,0,0,1,12.30048,4.023a2.00082,2.00082,0,0,1,2.15313,1.20715.31.31,0,0,0,.36127.19892L17.888,4.63739c.38922-.10028.4931-.28076.44-.44885A6.00454,6.00454,0,0,0,11.45349.109,6.19508,6.19508,0,0,0,6.61414,6.48425a24.04461,24.04461,0,0,0,.47131,3.70618q.11664.6384.22534,1.30957H5.876a.26957.26957,0,0,0-.26959.26953v2.46088A.26962.26962,0,0,0,5.876,14.5H7.59c.00415.16937.01642.32257.01642.5,0,2.4668-2.49512,4.73438-3.2627,5.373a2.05669,2.05669,0,0,0-.48389,2.5625L3.8858,22.98a2.05264,2.05264,0,0,0,2.38227.92719A17.50783,17.50783,0,0,1,10.60645,23a5.59576,5.59576,0,0,1,1.86767.39746A9.33243,9.33243,0,0,0,15.60645,24a12.01013,12.01013,0,0,0,4.605-1.07471.30844.30844,0,0,0,.14673-.423Z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="number"
-                    id="product-price-icon"
-                    className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                    placeholder="49.99"
-                  />
-                </div>
-              </div>
+              <TextField
+                htmlId="product-title"
+                inputType="text"
+                showLabel={true}
+                lableText="Product Title"
+                placeholder="Crochet Bear"
+                value={productTitle}
+                setValue={setProductTitle}
+              />
+              <TextArea
+                htmlId="short-description"
+                lableText="Short Description"
+                showLabel={true}
+                value={shortDescription}
+                setValue={setShortDescription}
+                rows={4}
+                placeholder="Introducing our Handmade Crochet Bear, a charming and huggable companion that brings warmth and nostalgia to your life. Crafted with love and care, each bear is meticulously crocheted by skilled artisans, ensuring a unique and one-of-a-kind creation."
+              />
+              <TextArea
+                htmlId="long-description"
+                lableText="Long Description"
+                showLabel={true}
+                value={longDescription}
+                setValue={setLongDescription}
+                rows={6}
+                placeholder="Introducing our Handmade Crochet Bear, a charming and huggable companion that brings warmth and nostalgia to your life. Crafted with love and care, each bear is meticulously crocheted by skilled artisans, ensuring a unique and one-of-a-kind creation. Made from soft, high-quality yarn, this crochet bear boasts a cozy texture that invites cuddles and embraces. Its intricate details, from the adorable button eyes to the carefully stitched nose, give it a delightful personality that appeals to all ages. Whether you're looking for a cherished gift for a loved one or a whimsical addition to your home decor, our Handmade Crochet Bear is a heartwarming choice. Capture the essence of handmade craftsmanship and the comfort of a classic teddy bear with our meticulously designed crochet creation. Cherish the beauty of tradition and the joy of a truly special companion with our Handmade Crochet Bear."
+              />
+              <TextField
+                htmlId="product-price"
+                inputType="number"
+                showLabel={true}
+                lableText="Product Price"
+                placeholder="49.99"
+                icon={<PoundSignIcon />}
+                value={productPrice}
+                setValue={setProductPrice}
+              />
               <div>
                 {files ? (
                   <div className=" px-4 sm:px-6 lg:px-8">

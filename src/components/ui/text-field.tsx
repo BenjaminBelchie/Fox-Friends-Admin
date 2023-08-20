@@ -7,6 +7,8 @@ type Props = {
   showLabel: boolean;
   lableText: string;
   inputType: 'text' | 'password' | 'email' | 'number';
+  icon?: JSX.Element;
+  placeholder?: string;
 };
 
 export default function TextField({
@@ -16,7 +18,10 @@ export default function TextField({
   showLabel,
   lableText,
   inputType,
+  icon,
+  placeholder,
 }: Props) {
+  console.log('ICON ', icon);
   return (
     <div>
       {showLabel && (
@@ -26,11 +31,19 @@ export default function TextField({
           {lableText}
         </label>
       )}
-      <div>
+      <div className="relative">
+        {icon && (
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+            {icon}
+          </div>
+        )}
         <input
           type={inputType}
           id={htmlId}
-          className="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900"
+          placeholder={placeholder}
+          className={`w-full rounded-lg border ${
+            icon ? `pl-10` : ``
+          } border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900`}
           value={value}
           onChange={e => {
             setValue(e.target.value);
