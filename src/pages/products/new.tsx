@@ -1,7 +1,14 @@
+import { Heart, X } from 'lucide-react';
 import { ChangeEvent, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import TextArea from '~/components/ui/text-area';
 import TextField from '~/components/ui/text-field';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/ui/tooltip';
 import { PoundSignIcon } from '~/constants/icons';
 
 export default function NewProducts() {
@@ -9,10 +16,13 @@ export default function NewProducts() {
   const [shortDescription, setShortDescription] = useState('');
   const [longDescription, setLongDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
-  const [files, setFiles] = useState<FileList | null>(null);
+  const [files, setFiles] = useState<File[] | null>(null);
+
+  // State to show the primary image, string is image name
+  const [primaryImage, setPrimaryImage] = useState<string>();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFiles(e.target.files);
+    setFiles(Array.from(e.target.files));
   };
 
   return (
@@ -60,16 +70,70 @@ export default function NewProducts() {
                 setValue={setProductPrice}
               />
               <div>
-                {files ? (
-                  <div className=" px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-8 xl:gap-x-8">
+                {files && files.length > 0 ? (
+                  <div>
+                    <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:gap-x-8">
                       {files &&
-                        Array.from(files).map(image => (
-                          <div>
-                            <img
-                              className="h-64 object-cover duration-700 ease-in-out group-hover:opacity-75	"
-                              src={URL.createObjectURL(image)}
-                            />
+                        Array.from(files).map((image, i) => (
+                          <div
+                            className="flex h-64 justify-between p-2 duration-700 ease-in-out group-hover:opacity-75	"
+                            style={{
+                              backgroundImage: `url(${URL.createObjectURL(
+                                image,
+                              )})`,
+                              backgroundSize: 'cover',
+                            }}>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    onClick={e => {
+                                      e.preventDefault();
+                                      if (primaryImage === image.name) {
+                                        setPrimaryImage(null);
+                                      } else {
+                                        setPrimaryImage(image.name);
+                                      }
+                                    }}
+                                    className="bg-green-500 hover:bg-green-400"
+                                    size="icon">
+                                    <Heart
+                                      fill={
+                                        primaryImage === image.name
+                                          ? `#ffff`
+                                          : `transparent`
+                                      }
+                                      className="h-4 w-4"
+                                    />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent align="start">
+                                  <p>Make primary image</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    onClick={e => {
+                                      e.preventDefault();
+                                      const copyArray = [...files];
+                                      copyArray.splice(i, 1);
+                                      setFiles(copyArray);
+                                      if (primaryImage === image.name)
+                                        setPrimaryImage(null);
+                                    }}
+                                    className="bg-red-500 hover:bg-red-400"
+                                    size="icon">
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent align="end">
+                                  <p>Reset Image</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </div>
                         ))}
                     </div>

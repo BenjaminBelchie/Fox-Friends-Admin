@@ -21,7 +21,6 @@ export default function TextField({
   icon,
   placeholder,
 }: Props) {
-  console.log('ICON ', icon);
   return (
     <div>
       {showLabel && (
