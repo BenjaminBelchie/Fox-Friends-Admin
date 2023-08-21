@@ -2,6 +2,7 @@ import type { InferGetStaticPropsType, GetStaticProps } from 'next';
 import { Product } from '~/types/Product';
 import FeaturedProducts from '~/components/FeaturedProducts/FeaturedProducts';
 import HeroEditor from '~/components/HeroEditor';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export const getStaticProps: GetStaticProps<{ data: Product[] }> = () => {
   return {
@@ -65,10 +66,13 @@ export const getStaticProps: GetStaticProps<{ data: Product[] }> = () => {
 export default function Home({
   data,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { user, error, isLoading } = useUser();
   return (
     <div className="flex">
       <div className=" w-full">
-        <p className="border-b pb-3 text-5xl font-medium">Dashboard</p>
+        <p className="border-b pb-3 text-5xl font-medium">
+          {user ? `Welcome ${user.name}` : `Welcome`}
+        </p>
         <HeroEditor />
         <FeaturedProducts data={data} />
       </div>

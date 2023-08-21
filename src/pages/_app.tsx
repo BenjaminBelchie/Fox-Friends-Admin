@@ -1,5 +1,4 @@
 import { type Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
 import { type AppType } from 'next/app';
 import { Toaster } from '~/components/ui/toaster';
 import Head from 'next/head';
@@ -7,6 +6,7 @@ import '~/styles/globals.css';
 import Sidebar from '~/components/Sidebar';
 import { Provider } from 'react-redux';
 import { store } from '~/redux/store';
+import { UserProvider, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -17,19 +17,19 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <Head>
         <title>Fox & Friends Admin</title>
       </Head>
-      <Provider store={store}>
-        <div className="flex w-full">
-          <div className="w-[340px]">
-            <Sidebar />
-          </div>
-          <div className="w-full px-12 py-8">
-            <SessionProvider session={session}>
+      <UserProvider>
+        <Provider store={store}>
+          <div className="flex w-full">
+            <div className="w-[340px]">
+              <Sidebar />
+            </div>
+            <div className="w-full px-12 py-8">
               <Component {...pageProps} />
-            </SessionProvider>
+            </div>
           </div>
-        </div>
-        <Toaster />
-      </Provider>
+          <Toaster />
+        </Provider>
+      </UserProvider>
     </>
   );
 };

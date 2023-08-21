@@ -59,7 +59,7 @@ export default function Sidebar() {
             </li>
             <li className="rounded-sm">
               <a
-                href="#"
+                href="/api/auth/logout"
                 className="flex items-center space-x-3 rounded-md p-2">
                 <LogoutIcon />
                 <span className="text-gray-100">Logout</span>
