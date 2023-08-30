@@ -1,19 +1,12 @@
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from '@radix-ui/react-tooltip';
 import { createClient } from '@supabase/supabase-js';
 import React from 'react';
 import axios from 'axios';
-import { Heart, X } from 'lucide-react';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useForm, SubmitHandler, Controller, set } from 'react-hook-form';
 import { Button } from '~/components/ui/button';
 import FormTextArea from '~/components/ui/form-text-area';
 import FormTextField from '~/components/ui/form-text-field';
-import { toast, useToast } from '~/components/ui/use-toast';
+import { toast } from '~/components/ui/use-toast';
 import { PoundSignIcon } from '~/constants/icons';
 import { env } from '~/env.mjs';
 import { AddProductBody } from '~/pages/api/products/add';
