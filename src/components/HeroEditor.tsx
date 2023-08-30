@@ -10,6 +10,7 @@ import {
 } from './ui/tooltip';
 import { useToast } from './ui/use-toast';
 import { Input } from './ui/input';
+import FormTextField from './ui/form-text-field';
 import TextField from './ui/text-field';
 
 const primaryInitText = 'Artisanal Crochet Goods';

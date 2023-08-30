@@ -21,10 +21,18 @@ model Product {
     longDescription String
     price String
     status Status
-    imgUrl String
     tags ProductTags[]
+    images ProductImages[]
     isFeatured Boolean @default(false)
     createdAt DateTime @default(now())
+}
+
+model ProductImages {
+    id String @id @default(uuid()) @db.Uuid
+    image String
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String @db.Uuid
+
 }
 
 model ProductTags {
