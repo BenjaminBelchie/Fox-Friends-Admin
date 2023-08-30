@@ -1,5 +1,5 @@
 import { Path, UseFormRegister } from 'react-hook-form';
-import { NewProductFormInputs } from '../Forms/Products/NewProductForm';
+import { NewProductFormInputs } from '../Forms/NewProductForm';
 
 type Props = {
   htmlId: string;

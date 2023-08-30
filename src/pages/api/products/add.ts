@@ -18,7 +18,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const data: AddProductBody = req.body;
-    console.log(data);
+
     const transaction = await prisma.product.create({
       data: {
         title: data.productTitle,
@@ -44,7 +44,12 @@ export default async function handler(
         },
       },
     });
-    res.status(200).send('Success');
+
+    if (transaction.createdAt) {
+      res.status(200).send('Success');
+    } else {
+      res.status(500).send('Could not add product');
+    }
   } else {
     res.status(400).send('Invalid request method');
   }
