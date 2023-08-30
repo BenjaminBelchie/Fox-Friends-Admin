@@ -1,5 +1,4 @@
 import { useState, ChangeEvent, useEffect } from 'react';
-import Image from 'next/image';
 import { Button } from './ui/button';
 import { Check, X } from 'lucide-react';
 import {
@@ -9,7 +8,6 @@ import {
   TooltipTrigger,
 } from './ui/tooltip';
 import { useToast } from './ui/use-toast';
-import { Input } from './ui/input';
 import TextField from './ui/text-field';
 
 const primaryInitText = 'Artisanal Crochet Goods';
