@@ -11,7 +11,7 @@ import { PoundSignIcon } from '~/constants/icons';
 import { env } from '~/env.mjs';
 import { AddProductBody } from '~/pages/api/products/add';
 import { generateUUID } from '~/utils/generateId';
-import { Status } from '@prisma/client';
+import { Product, ProductImages, Status } from '@prisma/client';
 import {
   Select,
   SelectContent,
@@ -22,8 +22,12 @@ import {
 } from '~/components/ui/select';
 import ProductTags from '../ProductTags';
 import FileUploader from '../FileUploader';
+import FileViewer from '../FileViewer';
+import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
+import Router from 'next/router';
 
 export type NewProductFormInputs = {
+  id?: string;
   productTitle: string;
   shortDescription: string;
   longDescription: string;
@@ -32,12 +36,21 @@ export type NewProductFormInputs = {
   tags: string[];
 };
 
-export default function NewProductForm() {
-  const { register, handleSubmit, reset, control } =
-    useForm<NewProductFormInputs>();
+type Props = {
+  product?: NewProductFormInputs;
+  images?: ProductImages[];
+};
 
-  const [files, setFiles] = useState<File[] | null>(null);
-  const [tags, setTags] = useState<string[]>([]);
+export default function NewProductForm(props: Props) {
+  const { register, handleSubmit, reset, control } =
+    useForm<NewProductFormInputs>({
+      defaultValues: props.product ? props.product : null,
+    });
+
+  const [files, setFiles] = useState<File[] | null | undefined>(null);
+  const [tags, setTags] = useState<string[]>(
+    props.product && props.product.tags ? props.product.tags : [],
+  );
 
   const supabase = createClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
@@ -60,6 +73,7 @@ export default function NewProductForm() {
       ...productData,
     });
     if (res.status === 200) {
+      Router.push('/products');
       reset();
       setFiles(null);
       setTags([]);
@@ -70,8 +84,39 @@ export default function NewProductForm() {
     }
   };
 
+  const onUpdate: SubmitHandler<NewProductFormInputs> = async formData => {
+    const fileNames: string[] = [];
+    if (files) {
+      files.map(async file => {
+        let uniqueFilename = `${generateUUID()}_${file.name}`;
+        fileNames.push(uniqueFilename);
+        await supabase.storage.from('images').upload(uniqueFilename, file);
+      });
+    }
+    const productData: AddProductBody = {
+      ...formData,
+      images: fileNames,
+      tags: tags,
+    };
+    const res = await axios.post('/api/products/update', {
+      ...productData,
+      id: props.product.id,
+    });
+    if (res.status === 200) {
+      Router.push('/products');
+      toast({
+        title: 'Product Updated Successfully ✔',
+        variant: 'success',
+      });
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+    <form
+      onSubmit={handleSubmit(
+        props.product && props.images ? onUpdate : onSubmit,
+      )}
+      className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">
         <FormTextField
           htmlId="product-title"
@@ -120,7 +165,7 @@ export default function NewProductForm() {
             name="status"
             control={control}
             render={({ field }) => (
-              <Select onValueChange={field.onChange}>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <SelectTrigger className="w-[180px] border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900">
                   <SelectValue placeholder="Select a status" />
                 </SelectTrigger>
@@ -136,8 +181,24 @@ export default function NewProductForm() {
           />
         </div>
         <ProductTags tags={tags} setTags={setTags} />
+        {props.images && (
+          <FileViewer
+            primaryImage={
+              props.images
+                .filter(img => img.isPrimaryImage === true)
+                .map(img => {
+                  return supabaseProductImagePrefix + img.image;
+                })[0]
+            }
+            files={props.images.map(
+              image => supabaseProductImagePrefix + image.image,
+            )}
+          />
+        )}
         <FileUploader files={files} setFiles={setFiles} />
-        <Button className="w-fit">Add Product</Button>
+        <Button className="w-fit">
+          {props.product ? 'Update Product' : 'Add Product'}
+        </Button>
       </div>
     </form>
   );

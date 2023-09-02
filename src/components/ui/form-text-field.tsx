@@ -39,6 +39,7 @@ export default function FormTextField({
         )}
         <input
           type={inputType}
+          step={inputType === 'number' ? '0.01' : undefined}
           id={htmlId}
           placeholder={placeholder}
           className={`w-full rounded-lg border ${

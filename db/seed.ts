@@ -45,7 +45,14 @@ const products: Prisma.ProductCreateArgs[] = [
         "Introducing our adorable Handmade Crochet Panda – the perfect companion for panda lovers of all ages! Crafted with love and attention to detail, this charming crochet panda is a delightful blend of cuddliness and creativity. Each panda is meticulously handcrafted by skilled artisans, ensuring that every piece is unique and one-of-a-kind. Made from soft, high-quality yarn, this crochet panda is irresistibly huggable and soft to the touch, making it a comforting friend for children and a charming decor item for panda-themed rooms. With its endearing black and white pattern, expressive eyes, and sweet smile, our Handmade Crochet Panda captures the essence of these beloved creatures in a tangible form. Whether you're searching for a heartwarming gift for a special someone or a delightful addition to your own plush collection, this crochet panda is sure to bring joy and happiness wherever it goes. Not only is this handmade crochet panda a wonderful companion, but it's also an eco-friendly choice. Unlike mass-produced toys, our crochet panda is crafted with sustainability in mind, using natural materials and minimal packaging. It's a thoughtful way to support traditional craftsmanship and reduce your environmental footprint.",
       status: Status.ACTIVE,
       images: {
-        create: [{ image: '/testProduct.jpg' }],
+        create: [
+          {
+            image: 'test.png',
+          },
+          {
+            image: 'about-photo.png',
+          },
+        ],
       },
       price: '50',
       tags: {
@@ -62,7 +69,17 @@ const products: Prisma.ProductCreateArgs[] = [
         "Introducing our adorable Handmade Crochet Panda – the perfect companion for panda lovers of all ages! Crafted with love and attention to detail, this charming crochet panda is a delightful blend of cuddliness and creativity. Each panda is meticulously handcrafted by skilled artisans, ensuring that every piece is unique and one-of-a-kind. Made from soft, high-quality yarn, this crochet panda is irresistibly huggable and soft to the touch, making it a comforting friend for children and a charming decor item for panda-themed rooms. With its endearing black and white pattern, expressive eyes, and sweet smile, our Handmade Crochet Panda captures the essence of these beloved creatures in a tangible form. Whether you're searching for a heartwarming gift for a special someone or a delightful addition to your own plush collection, this crochet panda is sure to bring joy and happiness wherever it goes. Not only is this handmade crochet panda a wonderful companion, but it's also an eco-friendly choice. Unlike mass-produced toys, our crochet panda is crafted with sustainability in mind, using natural materials and minimal packaging. It's a thoughtful way to support traditional craftsmanship and reduce your environmental footprint.",
       status: Status.ACTIVE,
       images: {
-        create: [{ image: '/testProduct.jpg' }],
+        create: [
+          {
+            image: 'hero.jpg',
+          },
+          {
+            image: 'test.png',
+          },
+          {
+            image: 'about-photo.png',
+          },
+        ],
       },
       price: '60',
       tags: {
@@ -83,7 +100,14 @@ const products: Prisma.ProductCreateArgs[] = [
         "Introducing our adorable Handmade Crochet Panda – the perfect companion for panda lovers of all ages! Crafted with love and attention to detail, this charming crochet panda is a delightful blend of cuddliness and creativity. Each panda is meticulously handcrafted by skilled artisans, ensuring that every piece is unique and one-of-a-kind. Made from soft, high-quality yarn, this crochet panda is irresistibly huggable and soft to the touch, making it a comforting friend for children and a charming decor item for panda-themed rooms. With its endearing black and white pattern, expressive eyes, and sweet smile, our Handmade Crochet Panda captures the essence of these beloved creatures in a tangible form. Whether you're searching for a heartwarming gift for a special someone or a delightful addition to your own plush collection, this crochet panda is sure to bring joy and happiness wherever it goes. Not only is this handmade crochet panda a wonderful companion, but it's also an eco-friendly choice. Unlike mass-produced toys, our crochet panda is crafted with sustainability in mind, using natural materials and minimal packaging. It's a thoughtful way to support traditional craftsmanship and reduce your environmental footprint.",
       status: Status.ACTIVE,
       images: {
-        create: [{ image: '/testProduct.jpg' }],
+        create: [
+          {
+            image: 'hero.jpg',
+          },
+          {
+            image: 'about-photo.png',
+          },
+        ],
       },
       price: '45',
       tags: {
@@ -100,7 +124,17 @@ const products: Prisma.ProductCreateArgs[] = [
         "Introducing our adorable Handmade Crochet Panda – the perfect companion for panda lovers of all ages! Crafted with love and attention to detail, this charming crochet panda is a delightful blend of cuddliness and creativity. Each panda is meticulously handcrafted by skilled artisans, ensuring that every piece is unique and one-of-a-kind. Made from soft, high-quality yarn, this crochet panda is irresistibly huggable and soft to the touch, making it a comforting friend for children and a charming decor item for panda-themed rooms. With its endearing black and white pattern, expressive eyes, and sweet smile, our Handmade Crochet Panda captures the essence of these beloved creatures in a tangible form. Whether you're searching for a heartwarming gift for a special someone or a delightful addition to your own plush collection, this crochet panda is sure to bring joy and happiness wherever it goes. Not only is this handmade crochet panda a wonderful companion, but it's also an eco-friendly choice. Unlike mass-produced toys, our crochet panda is crafted with sustainability in mind, using natural materials and minimal packaging. It's a thoughtful way to support traditional craftsmanship and reduce your environmental footprint.",
       status: Status.ACTIVE,
       images: {
-        create: [{ image: '/testProduct.jpg' }],
+        create: [
+          {
+            image: 'hero.jpg',
+          },
+          {
+            image: 'test.png',
+          },
+          {
+            image: 'about-photo.png',
+          },
+        ],
       },
       price: '80',
       tags: {
@@ -125,6 +159,7 @@ const siteConfig: Prisma.SiteConfigCreateArgs = {
 async function main() {
   await prisma.product.deleteMany({});
   await prisma.tag.deleteMany({});
+  await prisma.productImages.deleteMany({});
   await prisma.productTags.deleteMany({});
   await prisma.siteConfig.deleteMany({});
   tags.forEach(async tag => {

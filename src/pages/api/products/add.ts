@@ -3,6 +3,7 @@ import { prisma } from '~/server/db';
 import { Status } from '@prisma/client';
 
 export type AddProductBody = {
+  id?: string;
   productTitle: string;
   shortDescription: string;
   longDescription: string;

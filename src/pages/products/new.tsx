@@ -1,6 +1,6 @@
 import NewProductForm from '~/components/Forms/NewProductForm';
 
-export default function NewProducts() {
+export default function NewProductsPage() {
   return (
     <div className="flex">
       <div className=" w-full">

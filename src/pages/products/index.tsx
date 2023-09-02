@@ -1,55 +1,49 @@
-import { Payment, columns } from '~/components/ProductsTable/columns';
+import axios from 'axios';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { useEffect } from 'react';
+import {
+  FlatProductsWithTagsAndImages,
+  columns,
+} from '~/components/ProductsTable/columns';
 import { DataTable } from '~/components/ProductsTable/table';
+import { useAppDispatch } from '~/hooks/redux';
+import { fetchProducts } from '~/redux/reducers/products/productSlice';
+import { prisma } from '~/server/db';
+import { ProductWithTagsAndImages } from '~/types/Product';
 
-type Props = () => {
-  props: {
-    data: Payment[];
-  };
-};
-
-export const getStaticProps: Props = () => {
+export const getServerSideProps: GetServerSideProps<{
+  products: FlatProductsWithTagsAndImages[];
+}> = async context => {
+  const products = await prisma.product.findMany({
+    include: { tags: { include: { tag: true } }, images: true },
+  });
+  const flatProducts: FlatProductsWithTagsAndImages[] = products.map(
+    product => {
+      return {
+        id: product.id,
+        price: parseFloat(product.price),
+        shortDescription: product.shortDescription,
+        status: product.status,
+        title: product.title,
+        tags: product.tags.map(tag => tag.tag.tagName),
+      };
+    },
+  );
   return {
     props: {
-      data: [
-        {
-          id: '728ed52f',
-          price: 100,
-          status: 'pending',
-          title: 'Crochet Bunny',
-          tags: ['crochet', 'cute', 'animal'],
-        },
-        {
-          id: '728ed52ffdgsf',
-          price: 55,
-          status: 'pending',
-          title: 'Crochet Rabbit',
-          tags: ['crochet', 'cute', 'animal'],
-        },
-        {
-          id: '728eddfgdfgdf52f',
-          price: 60,
-          status: 'pending',
-          title: 'Crochet Bear',
-          tags: ['crochet', 'cute', 'animal'],
-        },
-        {
-          id: 'ewrweewgfd',
-          price: 25,
-          status: 'pending',
-          title: 'Crochet Bunny',
-          tags: ['crochet', 'cute', 'animal'],
-        },
-      ],
+      products: flatProducts,
     },
   };
 };
 
-export default function ProductsPage({ data }) {
+export default function ProductsPage({
+  products,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div className="flex">
       <div className=" w-full">
         <p className="border-b pb-3 text-5xl font-medium">Products</p>
-        <DataTable columns={columns} data={data} />
+        <DataTable columns={columns} data={products} />
       </div>
     </div>
   );
