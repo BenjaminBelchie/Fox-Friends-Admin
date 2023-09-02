@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+
 export type Product = {
   id: string;
   price: number;
@@ -7,3 +9,7 @@ export type Product = {
   image: string;
   shortDescription: string;
 };
+
+export type ProductWithTagsAndImages = Prisma.ProductGetPayload<{
+  include: { tags: { include: { tag } }; images: true };
+}>;

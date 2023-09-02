@@ -12,29 +12,19 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '~/components/ui/alert-dialog';
+import Link from 'next/link';
+import { toast } from '../ui/use-toast';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
+export type FlatProductsWithTagsAndImages = {
   id: string;
   price: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
+  status: string;
   title: string;
   tags: string[];
+  shortDescription: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<FlatProductsWithTagsAndImages>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -113,11 +103,22 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}>
+              onClick={() => {
+                navigator.clipboard.writeText(product.id);
+                toast({
+                  title: `ID Copied ✔`,
+                  variant: 'success',
+                  description: product.id,
+                });
+              }}>
               Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Update product</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/products/update/${product.id}`}>
+                Update product
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete product</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

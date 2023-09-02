@@ -1,10 +1,16 @@
-import type { InferGetStaticPropsType, GetStaticProps } from 'next';
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { Product } from '~/types/Product';
 import FeaturedProducts from '~/components/FeaturedProducts/FeaturedProducts';
 import HeroEditor from '~/components/HeroEditor';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchProducts } from '~/redux/reducers/products/productSlice';
+import { useAppDispatch } from '~/hooks/redux';
 
-export const getStaticProps: GetStaticProps<{ data: Product[] }> = () => {
+export const getServerSideProps: GetServerSideProps<{
+  data: Product[];
+}> = async () => {
   return {
     props: {
       data: [
@@ -65,8 +71,13 @@ export const getStaticProps: GetStaticProps<{ data: Product[] }> = () => {
 
 export default function Home({
   data,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { user, error, isLoading } = useUser();
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+
   return (
     <div className="flex">
       <div className=" w-full">
