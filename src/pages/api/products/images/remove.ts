@@ -18,14 +18,11 @@ export default async function handler(
 
       const latestImages = await prisma.productImages.findMany({
         where: { productId: foundImage.productId },
+        orderBy: { image: 'asc' },
       });
-      res
-        .status(200)
-        .json({
-          images: latestImages.map(
-            image => supabaseProductImagePrefix + image.image,
-          ),
-        });
+      res.status(200).json({
+        images: latestImages,
+      });
     } catch (error) {
       res.status(500).send({ error: error.message });
     }

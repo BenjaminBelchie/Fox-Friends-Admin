@@ -6,8 +6,20 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === 'POST') {
-    const image = req.body.image;
+    const { image, productId } = req.body;
     try {
+      const imageToRemovePrimary = await prisma.productImages.findFirst({
+        where: { AND: [{ productId: productId }, { isPrimaryImage: true }] },
+      });
+      if (imageToRemovePrimary) {
+        await prisma.productImages.update({
+          where: { id: imageToRemovePrimary.id },
+          data: {
+            isPrimaryImage: false,
+          },
+        });
+      }
+
       const foundImage = await prisma.productImages.findFirst({
         where: { image: image },
       });
@@ -20,6 +32,7 @@ export default async function handler(
 
       const latestImages = await prisma.productImages.findMany({
         where: { productId: foundImage.productId },
+        orderBy: { image: 'asc' },
       });
       res.status(200).json({
         images: latestImages,

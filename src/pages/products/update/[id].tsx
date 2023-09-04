@@ -16,7 +16,10 @@ export const getServerSideProps: GetServerSideProps<{
   const { id } = context.query;
   const product = await prisma.product.findUnique({
     where: { id: Array.isArray(id) ? id[0] : id },
-    include: { images: true, tags: { include: { tag: true } } },
+    include: {
+      images: { orderBy: { image: 'asc' } },
+      tags: { include: { tag: true } },
+    },
   });
 
   if (product.createdAt) {
@@ -30,6 +33,7 @@ export const getServerSideProps: GetServerSideProps<{
       productTitle: product.title,
       shortDescription: product.shortDescription,
       longDescription: product.longDescription,
+      isFeatured: product.isFeatured,
       price: parseFloat(product.price),
       status: product.status,
       tags: tags,

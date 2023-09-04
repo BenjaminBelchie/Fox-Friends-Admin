@@ -25,6 +25,7 @@ import FileUploader from '../FileUploader';
 import FileViewer from '../FileViewer';
 import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
 import Router from 'next/router';
+import { Checkbox } from '../ui/checkbox';
 
 export type NewProductFormInputs = {
   id?: string;
@@ -32,6 +33,7 @@ export type NewProductFormInputs = {
   shortDescription: string;
   longDescription: string;
   price: number;
+  isFeatured: boolean;
   status: Status;
   tags: string[];
 };
@@ -180,21 +182,26 @@ export default function NewProductForm(props: Props) {
             )}
           />
         </div>
-        <ProductTags tags={tags} setTags={setTags} />
-        {props.images && (
-          <FileViewer
-            primaryImage={
-              props.images
-                .filter(img => img.isPrimaryImage === true)
-                .map(img => {
-                  return supabaseProductImagePrefix + img.image;
-                })[0]
-            }
-            files={props.images.map(
-              image => supabaseProductImagePrefix + image.image,
+        <div>
+          <label
+            htmlFor="status"
+            className="mb-2 block text-sm font-medium text-gray-900">
+            Feature Product
+          </label>
+          <Controller
+            name="isFeatured"
+            control={control}
+            render={({ field }) => (
+              <Checkbox
+                id="is-featured"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
             )}
           />
-        )}
+        </div>
+        <ProductTags tags={tags} setTags={setTags} />
+        {props.images && <FileViewer files={props.images} />}
         <FileUploader files={files} setFiles={setFiles} />
         <Button className="w-fit">
           {props.product ? 'Update Product' : 'Add Product'}

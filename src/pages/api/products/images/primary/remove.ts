@@ -20,6 +20,7 @@ export default async function handler(
 
       const latestImages = await prisma.productImages.findMany({
         where: { productId: foundImage.productId },
+        orderBy: { image: 'asc' },
       });
       res.status(200).json({
         images: latestImages,

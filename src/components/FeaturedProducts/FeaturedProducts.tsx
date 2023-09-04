@@ -3,12 +3,12 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { setIsEditingFeaturedProducts } from '~/redux/reducers/global/globalSlice';
 import { Button } from '../ui/button';
-import { toast, useToast } from '../ui/use-toast';
+import { useToast } from '../ui/use-toast';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
-import { Product } from '~/types/Product';
+import { ProductWithImages } from '~/types/Product';
 
 type Props = {
-  data: Product[];
+  data: ProductWithImages[];
 };
 
 export default function FeaturedProducts({ data }: Props) {

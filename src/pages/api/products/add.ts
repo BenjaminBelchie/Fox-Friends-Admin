@@ -8,6 +8,7 @@ export type AddProductBody = {
   shortDescription: string;
   longDescription: string;
   price: number;
+  isFeatured: boolean;
   status: Status;
   images: string[];
   tags: string[];
@@ -26,6 +27,7 @@ export default async function handler(
         shortDescription: data.shortDescription,
         longDescription: data.longDescription,
         price: data.price.toString(),
+        isFeatured: data.isFeatured,
         status: data.status,
         images: {
           create: data.images.map(image => {
