@@ -2,18 +2,18 @@ import update from 'immutability-helper';
 import { useCallback, useState } from 'react';
 
 import { Card } from './Card';
-import { Product } from '~/types/Product';
+import { Product, ProductWithImages } from '~/types/Product';
 
 const style = {
   width: 400,
 };
 
 type Props = {
-  data: Product[];
+  data: ProductWithImages[];
 };
 
 export interface ContainerState {
-  cards: Product[];
+  cards: ProductWithImages[];
 }
 
 export function Container({ data }: Props) {
@@ -21,17 +21,17 @@ export function Container({ data }: Props) {
     const [cards, setCards] = useState(data);
 
     const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-      setCards((prevCards: Product[]) =>
+      setCards((prevCards: ProductWithImages[]) =>
         update(prevCards, {
           $splice: [
             [dragIndex, 1],
-            [hoverIndex, 0, prevCards[dragIndex] as Product],
+            [hoverIndex, 0, prevCards[dragIndex] as ProductWithImages],
           ],
         }),
       );
     }, []);
 
-    const renderCard = useCallback((card: Product, index: number) => {
+    const renderCard = useCallback((card: ProductWithImages, index: number) => {
       return (
         <Card
           product={card}

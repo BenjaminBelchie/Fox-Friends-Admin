@@ -13,3 +13,7 @@ export type Product = {
 export type ProductWithTagsAndImages = Prisma.ProductGetPayload<{
   include: { tags: { include: { tag } }; images: true };
 }>;
+
+export type ProductWithImages = Prisma.ProductGetPayload<{
+  include: { images: true };
+}>;

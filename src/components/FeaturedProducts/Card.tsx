@@ -5,9 +5,10 @@ import { useDrag, useDrop } from 'react-dnd';
 import Image from 'next/image';
 
 import { ItemTypes } from './ItemTypes';
-import { Product } from '~/types/Product';
+import { Product, ProductWithImages } from '~/types/Product';
 import { cn } from '~/utils';
 import { useAppSelector } from '~/hooks/redux';
+import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
 
 const style = {
   border: '1px dashed gray',
@@ -20,7 +21,7 @@ const style = {
 export interface CardProps {
   id: any;
   text: string;
-  product: Product;
+  product: ProductWithImages;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
 }
@@ -120,7 +121,13 @@ export const Card: FC<CardProps> = ({ id, product, index, moveCard }) => {
       <div className="aspect-w-1 aspect-h-1 xl:aspect-w-7 xl:aspect-h-8 w-full overflow-hidden rounded-lg bg-gray-200">
         <Image
           alt="product image"
-          src={product.image}
+          src={
+            product.images
+              .filter(image => image.isPrimaryImage === true)
+              .map(img => {
+                return supabaseProductImagePrefix + img.image;
+              })[0]
+          }
           height={300}
           width={300}
           className={cn(
