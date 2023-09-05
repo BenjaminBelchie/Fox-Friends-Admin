@@ -24,6 +24,7 @@ model Product {
     tags ProductTags[]
     images ProductImages[]
     isFeatured Boolean @default(false)
+    featuredIndex Int?
     createdAt DateTime @default(now())
 }
 

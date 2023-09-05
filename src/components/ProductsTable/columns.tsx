@@ -14,6 +14,7 @@ import {
 
 import Link from 'next/link';
 import { toast } from '../ui/use-toast';
+import { ProductImages } from '@prisma/client';
 
 export type FlatProductsWithTagsAndImages = {
   id: string;
@@ -21,7 +22,10 @@ export type FlatProductsWithTagsAndImages = {
   status: string;
   title: string;
   tags: string[];
+  isFeatured: boolean;
+  featuredIndex?: number;
   shortDescription: string;
+  images: ProductImages[];
 };
 
 export const columns: ColumnDef<FlatProductsWithTagsAndImages>[] = [

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '~/server/db';
 import { AddProductBody } from './add';
-import { create } from 'domain';
+import countFeaturedProducts from '~/utils/countFeaturedProducts';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,7 +11,11 @@ export default async function handler(
     const data: AddProductBody = req.body;
     if (data.id) {
       await prisma.productTags.deleteMany({ where: { productId: data.id } });
-      const transaction = await prisma.product.update({
+      const numberOfFeaturedProducts = await countFeaturedProducts();
+      if (data.isFeatured && data.featuredIndex === undefined) {
+        data.featuredIndex = numberOfFeaturedProducts + 1;
+      }
+      const product = await prisma.product.update({
         where: { id: data.id },
         data: {
           title: data.productTitle,
@@ -19,6 +23,7 @@ export default async function handler(
           longDescription: data.longDescription,
           price: data.price.toString(),
           isFeatured: data.isFeatured,
+          featuredIndex: data.featuredIndex,
           status: data.status,
           images: {
             create: data.images.map(image => {
@@ -39,7 +44,7 @@ export default async function handler(
         },
       });
 
-      if (transaction.createdAt) {
+      if (product.createdAt) {
         res.status(200).send('Updated product successfully');
       } else {
         res.status(500).send('There was an error updating the product');

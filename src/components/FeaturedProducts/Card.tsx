@@ -5,10 +5,10 @@ import { useDrag, useDrop } from 'react-dnd';
 import Image from 'next/image';
 
 import { ItemTypes } from './ItemTypes';
-import { Product, ProductWithImages } from '~/types/Product';
 import { cn } from '~/utils';
 import { useAppSelector } from '~/hooks/redux';
 import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
+import { FlatProductsWithTagsAndImages } from '../ProductsTable/columns';
 
 const style = {
   border: '1px dashed gray',
@@ -21,7 +21,7 @@ const style = {
 export interface CardProps {
   id: any;
   text: string;
-  product: ProductWithImages;
+  product: FlatProductsWithTagsAndImages;
   index: number;
   moveCard: (dragIndex: number, hoverIndex: number) => void;
 }

@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps<{
     },
   });
 
-  if (product.createdAt) {
+  if (product) {
     const tags: string[] = [];
     product.tags.forEach(tag => {
       tags.push(tag.tag.tagName);
@@ -46,7 +46,9 @@ export const getServerSideProps: GetServerSideProps<{
       },
     };
   } else {
-    return;
+    return {
+      notFound: true,
+    };
   }
 };
 
