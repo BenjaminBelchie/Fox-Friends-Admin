@@ -5,10 +5,12 @@ import { setIsEditingFeaturedProducts } from '~/redux/reducers/global/globalSlic
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
-import { ProductWithImages } from '~/types/Product';
+import axios from 'axios';
+import { FlatProductsWithTagsAndImages } from '../ProductsTable/columns';
+import { AddProductBody } from '~/pages/api/products/add';
 
 type Props = {
-  data: ProductWithImages[];
+  data: FlatProductsWithTagsAndImages[];
 };
 
 export default function FeaturedProducts({ data }: Props) {
@@ -16,7 +18,23 @@ export default function FeaturedProducts({ data }: Props) {
     state => state.globalSlice.isEditingFeaturedProducts,
   );
   const dispatch = useAppDispatch();
+  const cardsState = useAppSelector(state => state.globalSlice.featuredCards);
   const { toast } = useToast();
+
+  const updateFeaturedIndex = async (
+    product: FlatProductsWithTagsAndImages,
+    index: number,
+  ) => {
+    const productData = {
+      ...product,
+      images: [],
+      featuredIndex: index,
+    };
+    await axios.post('/api/products/update', {
+      ...productData,
+    });
+  };
+
   return (
     <div>
       <p className="pt-4 text-4xl">Featured Products</p>
@@ -31,19 +49,32 @@ export default function FeaturedProducts({ data }: Props) {
         </div>
       </DndProvider>
       {isEditingFeatured ? (
-        <Button
-          className="bg-green-600 hover:bg-green-500"
-          onClick={() => {
-            dispatch(setIsEditingFeaturedProducts(false));
-            toast({
-              title: 'Saved ✔',
-              variant: 'success',
-              description:
-                'The order of the featured products has been updated',
-            });
-          }}>
-          Save Order
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            className="bg-green-600 hover:bg-green-500"
+            onClick={() => {
+              dispatch(setIsEditingFeaturedProducts(false));
+              console.log('CARD STATE ', cardsState);
+              cardsState.map(async (product, i) => {
+                await updateFeaturedIndex(product, i);
+              });
+              toast({
+                title: 'Saved ✔',
+                variant: 'success',
+                description:
+                  'The order of the featured products has been updated',
+              });
+            }}>
+            Save Order
+          </Button>
+          <Button
+            className="bg-gray-500 hover:bg-gray-400"
+            onClick={() => {
+              dispatch(setIsEditingFeaturedProducts(false));
+            }}>
+            Cancel
+          </Button>
+        </div>
       ) : (
         <Button
           className="bg-orange-400 hover:bg-orange-300"

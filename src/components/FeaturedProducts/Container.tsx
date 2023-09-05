@@ -1,48 +1,62 @@
 import update from 'immutability-helper';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Card } from './Card';
-import { Product, ProductWithImages } from '~/types/Product';
+import { useAppDispatch } from '~/hooks/redux';
+import { setFeaturedCards } from '~/redux/reducers/global/globalSlice';
+import { FlatProductsWithTagsAndImages } from '../ProductsTable/columns';
 
 const style = {
   width: 400,
 };
 
 type Props = {
-  data: ProductWithImages[];
+  data: FlatProductsWithTagsAndImages[];
 };
 
 export interface ContainerState {
-  cards: ProductWithImages[];
+  cards: FlatProductsWithTagsAndImages[];
 }
 
 export function Container({ data }: Props) {
   {
+    const dispatch = useAppDispatch();
     const [cards, setCards] = useState(data);
 
+    useEffect(() => {
+      dispatch(setFeaturedCards(cards));
+    }, [cards]);
+
     const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
-      setCards((prevCards: ProductWithImages[]) =>
+      setCards((prevCards: FlatProductsWithTagsAndImages[]) =>
         update(prevCards, {
           $splice: [
             [dragIndex, 1],
-            [hoverIndex, 0, prevCards[dragIndex] as ProductWithImages],
+            [
+              hoverIndex,
+              0,
+              prevCards[dragIndex] as FlatProductsWithTagsAndImages,
+            ],
           ],
         }),
       );
     }, []);
 
-    const renderCard = useCallback((card: ProductWithImages, index: number) => {
-      return (
-        <Card
-          product={card}
-          key={card.id}
-          index={index}
-          id={card.id}
-          text={card.title}
-          moveCard={moveCard}
-        />
-      );
-    }, []);
+    const renderCard = useCallback(
+      (card: FlatProductsWithTagsAndImages, index: number) => {
+        return (
+          <Card
+            product={card}
+            key={card.id}
+            index={index}
+            id={card.id}
+            text={card.title}
+            moveCard={moveCard}
+          />
+        );
+      },
+      [],
+    );
 
     return (
       <>

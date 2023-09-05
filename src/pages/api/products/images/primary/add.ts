@@ -11,6 +11,7 @@ export default async function handler(
       const imageToRemovePrimary = await prisma.productImages.findFirst({
         where: { AND: [{ productId: productId }, { isPrimaryImage: true }] },
       });
+
       if (imageToRemovePrimary) {
         await prisma.productImages.update({
           where: { id: imageToRemovePrimary.id },
@@ -21,7 +22,7 @@ export default async function handler(
       }
 
       const foundImage = await prisma.productImages.findFirst({
-        where: { image: image },
+        where: { AND: [{ image: image }, { productId: productId }] },
       });
       await prisma.productImages.update({
         where: { id: foundImage.id },

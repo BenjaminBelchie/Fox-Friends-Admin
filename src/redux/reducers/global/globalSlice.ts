@@ -1,13 +1,16 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { FlatProductsWithTagsAndImages } from '~/components/ProductsTable/columns';
 import { AppDispatch, RootState } from '~/redux/store';
 import { ThunkAction } from '~/types/thunkAction';
 
 interface GlobalState {
   isEditingFeaturedProducts: boolean;
+  featuredCards: FlatProductsWithTagsAndImages[] | [];
 }
 
 const initialState: GlobalState = {
   isEditingFeaturedProducts: false,
+  featuredCards: [],
 };
 
 const globalSlice = createSlice({
@@ -16,6 +19,12 @@ const globalSlice = createSlice({
   reducers: {
     editingFeaturedProductsChanged: (state, action: PayloadAction<boolean>) => {
       state.isEditingFeaturedProducts = action.payload;
+    },
+    featuredProductsChanged: (
+      state,
+      action: PayloadAction<FlatProductsWithTagsAndImages[]>,
+    ) => {
+      state.featuredCards = action.payload;
     },
   },
 });
@@ -26,6 +35,15 @@ export const setIsEditingFeaturedProducts =
     dispatch(editingFeaturedProductsChanged(isEditingValue));
   };
 
-export const { editingFeaturedProductsChanged } = globalSlice.actions;
+export const setFeaturedCards =
+  (
+    cards: FlatProductsWithTagsAndImages[],
+  ): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async dispatch => {
+    dispatch(featuredProductsChanged(cards));
+  };
+
+export const { editingFeaturedProductsChanged, featuredProductsChanged } =
+  globalSlice.actions;
 
 export default globalSlice.reducer;

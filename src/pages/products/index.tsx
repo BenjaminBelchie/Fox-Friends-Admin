@@ -1,15 +1,10 @@
-import axios from 'axios';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { useEffect } from 'react';
 import {
   FlatProductsWithTagsAndImages,
   columns,
 } from '~/components/ProductsTable/columns';
 import { DataTable } from '~/components/ProductsTable/table';
-import { useAppDispatch } from '~/hooks/redux';
-import { fetchProducts } from '~/redux/reducers/products/productSlice';
 import { prisma } from '~/server/db';
-import { ProductWithTagsAndImages } from '~/types/Product';
 
 export const getServerSideProps: GetServerSideProps<{
   products: FlatProductsWithTagsAndImages[];
@@ -25,6 +20,9 @@ export const getServerSideProps: GetServerSideProps<{
         shortDescription: product.shortDescription,
         status: product.status,
         title: product.title,
+        isFeatured: product.isFeatured,
+        featuredIndex: product.featuredIndex,
+        images: product.images,
         tags: product.tags.map(tag => tag.tag.tagName),
       };
     },

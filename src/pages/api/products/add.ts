@@ -9,6 +9,7 @@ export type AddProductBody = {
   longDescription: string;
   price: number;
   isFeatured: boolean;
+  featuredIndex?: number;
   status: Status;
   images: string[];
   tags: string[];
