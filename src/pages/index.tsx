@@ -32,7 +32,6 @@ export const getServerSideProps: GetServerSideProps<{
 export default function Home({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log('DATA ', data);
   const { user, error, isLoading } = useUser();
   const dispatch = useAppDispatch();
   useEffect(() => {

@@ -8,7 +8,6 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const { productId } = req.body;
-      console.log('PRODUCT ID ', productId);
       await prisma.product.delete({ where: { id: productId } });
       const products = await prisma.product.findMany({
         where: { isFeatured: true },

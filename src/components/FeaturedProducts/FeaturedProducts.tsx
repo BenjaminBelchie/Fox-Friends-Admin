@@ -54,7 +54,6 @@ export default function FeaturedProducts({ data }: Props) {
             className="bg-green-600 hover:bg-green-500"
             onClick={() => {
               dispatch(setIsEditingFeaturedProducts(false));
-              console.log('CARD STATE ', cardsState);
               cardsState.map(async (product, i) => {
                 await updateFeaturedIndex(product, i);
               });
