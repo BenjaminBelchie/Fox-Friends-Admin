@@ -10,6 +10,7 @@ export type AddProductBody = {
   price: number;
   isFeatured: boolean;
   featuredIndex?: number;
+  primaryImage: string;
   status: Status;
   images: string[];
   tags: string[];
@@ -34,6 +35,7 @@ export default async function handler(
           create: data.images.map(image => {
             return {
               image: image,
+              isPrimaryImage: data.primaryImage === image,
             };
           }),
         },

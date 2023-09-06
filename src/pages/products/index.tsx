@@ -1,10 +1,13 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import {
-  FlatProductsWithTagsAndImages,
-  columns,
-} from '~/components/ProductsTable/columns';
+import { useEffect } from 'react';
+import { columns } from '~/components/ProductsTable/columns';
 import { DataTable } from '~/components/ProductsTable/table';
+import { useAppDispatch, useAppSelector } from '~/hooks/redux';
+import { fetchProducts } from '~/redux/reducers/products/productSlice';
 import { prisma } from '~/server/db';
+import createFlatProductsObject, {
+  FlatProductsWithTagsAndImages,
+} from '~/utils/createFlatProductObject';
 
 export const getServerSideProps: GetServerSideProps<{
   products: FlatProductsWithTagsAndImages[];
@@ -12,21 +15,7 @@ export const getServerSideProps: GetServerSideProps<{
   const products = await prisma.product.findMany({
     include: { tags: { include: { tag: true } }, images: true },
   });
-  const flatProducts: FlatProductsWithTagsAndImages[] = products.map(
-    product => {
-      return {
-        id: product.id,
-        price: parseFloat(product.price),
-        shortDescription: product.shortDescription,
-        status: product.status,
-        title: product.title,
-        isFeatured: product.isFeatured,
-        featuredIndex: product.featuredIndex,
-        images: product.images,
-        tags: product.tags.map(tag => tag.tag.tagName),
-      };
-    },
-  );
+  const flatProducts = createFlatProductsObject(products);
   return {
     props: {
       products: flatProducts,
@@ -37,11 +26,20 @@ export const getServerSideProps: GetServerSideProps<{
 export default function ProductsPage({
   products,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, []);
+  const productsState = useAppSelector(state => state.productSlice.products);
   return (
     <div className="flex">
       <div className=" w-full">
         <p className="border-b pb-3 text-5xl font-medium">Products</p>
-        <DataTable columns={columns} data={products} />
+        {productsState ? (
+          <DataTable columns={columns} data={productsState} />
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

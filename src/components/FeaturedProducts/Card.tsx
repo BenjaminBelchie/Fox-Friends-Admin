@@ -8,7 +8,7 @@ import { ItemTypes } from './ItemTypes';
 import { cn } from '~/utils';
 import { useAppSelector } from '~/hooks/redux';
 import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
-import { FlatProductsWithTagsAndImages } from '../ProductsTable/columns';
+import { FlatProductsWithTagsAndImages } from '~/utils/createFlatProductObject';
 
 const style = {
   border: '1px dashed gray',

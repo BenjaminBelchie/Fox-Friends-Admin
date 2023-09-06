@@ -10,14 +10,22 @@ import { Button } from './ui/button';
 
 type Props = {
   files: File[];
+  primaryImage: string;
   setFiles: Dispatch<SetStateAction<File[]>>;
+  setPrimaryImage: Dispatch<SetStateAction<string>>;
 };
-export default function FileUploader({ files, setFiles }: Props) {
+export default function FileUploader({
+  files,
+  primaryImage,
+  setFiles,
+  setPrimaryImage,
+}: Props) {
   // State to show the primary image, string is image name
-  const [primaryImage, setPrimaryImage] = useState<string>();
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFiles(Array.from(e.target.files));
   };
+
   return (
     <div>
       {files && files.length > 0 ? (

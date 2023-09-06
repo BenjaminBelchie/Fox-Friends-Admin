@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Card } from './Card';
 import { useAppDispatch } from '~/hooks/redux';
 import { setFeaturedCards } from '~/redux/reducers/global/globalSlice';
-import { FlatProductsWithTagsAndImages } from '../ProductsTable/columns';
+import { FlatProductsWithTagsAndImages } from '~/utils/createFlatProductObject';
 
 const style = {
   width: 400,

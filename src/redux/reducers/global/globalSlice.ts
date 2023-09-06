@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { FlatProductsWithTagsAndImages } from '~/components/ProductsTable/columns';
 import { AppDispatch, RootState } from '~/redux/store';
 import { ThunkAction } from '~/types/thunkAction';
+import { FlatProductsWithTagsAndImages } from '~/utils/createFlatProductObject';
 
 interface GlobalState {
   isEditingFeaturedProducts: boolean;
