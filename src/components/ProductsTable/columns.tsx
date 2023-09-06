@@ -15,18 +15,12 @@ import {
 import Link from 'next/link';
 import { toast } from '../ui/use-toast';
 import { ProductImages } from '@prisma/client';
-
-export type FlatProductsWithTagsAndImages = {
-  id: string;
-  price: number;
-  status: string;
-  title: string;
-  tags: string[];
-  isFeatured: boolean;
-  featuredIndex?: number;
-  shortDescription: string;
-  images: ProductImages[];
-};
+import axios from 'axios';
+import { store } from '~/redux/store';
+import { setProducts } from '~/redux/reducers/products/productSlice';
+import createFlatProductsObject, {
+  FlatProductsWithTagsAndImages,
+} from '~/utils/createFlatProductObject';
 
 export const columns: ColumnDef<FlatProductsWithTagsAndImages>[] = [
   {
@@ -123,7 +117,23 @@ export const columns: ColumnDef<FlatProductsWithTagsAndImages>[] = [
                 Update product
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Delete product</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={async () => {
+                const products = await axios.post('/api/products/delete', {
+                  productId: product.id,
+                });
+                if (products?.data) {
+                  store.dispatch(
+                    setProducts(createFlatProductsObject(products.data)),
+                  );
+                  toast({
+                    title: `${product.title} has been deleted ✔`,
+                    variant: 'success',
+                  });
+                }
+              }}>
+              Delete product
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

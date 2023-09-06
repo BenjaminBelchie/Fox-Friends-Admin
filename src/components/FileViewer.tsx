@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from './ui/tooltip';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { env } from '~/env.mjs';
 import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
@@ -17,8 +17,9 @@ import { Ring } from '@uiball/loaders';
 
 type Props = {
   files: ProductImages[];
+  primaryImage?: string;
 };
-export default function FileViewer({ files }: Props) {
+export default function FileViewer({ files, primaryImage }: Props) {
   const supabase = createClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY,
@@ -28,6 +29,21 @@ export default function FileViewer({ files }: Props) {
     id: '',
     loading: false,
   });
+
+  useEffect(() => {
+    if (primaryImage) {
+      removeCurrentPrimaryImage();
+    }
+  }, [primaryImage]);
+
+  const removeCurrentPrimaryImage = async () => {
+    const imageToRemove = images.filter(image => image.isPrimaryImage)[0];
+    const res = await axios.post('/api/products/images/primary/remove', {
+      image: imageToRemove.image,
+      productId: imageToRemove.productId,
+    });
+    setImages(res.data.images);
+  };
 
   const removeImage = async (image: ProductImages) => {
     setRemovingImage({ id: image.id, loading: true });

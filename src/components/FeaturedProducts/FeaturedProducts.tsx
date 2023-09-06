@@ -6,8 +6,8 @@ import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
 import { useAppDispatch, useAppSelector } from '~/hooks/redux';
 import axios from 'axios';
-import { FlatProductsWithTagsAndImages } from '../ProductsTable/columns';
 import { AddProductBody } from '~/pages/api/products/add';
+import { FlatProductsWithTagsAndImages } from '~/utils/createFlatProductObject';
 
 type Props = {
   data: FlatProductsWithTagsAndImages[];

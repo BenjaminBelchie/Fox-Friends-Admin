@@ -50,6 +50,7 @@ export default function NewProductForm(props: Props) {
     });
 
   const [files, setFiles] = useState<File[] | null | undefined>(null);
+  const [primaryImage, setPrimaryImage] = useState<string>();
   const [tags, setTags] = useState<string[]>(
     props.product && props.product.tags ? props.product.tags : [],
   );
@@ -61,8 +62,12 @@ export default function NewProductForm(props: Props) {
 
   const onSubmit: SubmitHandler<NewProductFormInputs> = async formData => {
     const fileNames: string[] = [];
+    let uniquePrimaryImage;
     files.map(async file => {
       let uniqueFilename = `${generateUUID()}_${file.name}`;
+      if (file.name === primaryImage) {
+        uniquePrimaryImage = uniqueFilename;
+      }
       fileNames.push(uniqueFilename);
       await supabase.storage.from('images').upload(uniqueFilename, file);
     });
@@ -70,6 +75,7 @@ export default function NewProductForm(props: Props) {
       ...formData,
       images: fileNames,
       tags: tags,
+      primaryImage: uniquePrimaryImage,
     };
     const res = await axios.post('/api/products/add', {
       ...productData,
@@ -88,9 +94,13 @@ export default function NewProductForm(props: Props) {
 
   const onUpdate: SubmitHandler<NewProductFormInputs> = async formData => {
     const fileNames: string[] = [];
+    let uniquePrimaryImage;
     if (files) {
       files.map(async file => {
         let uniqueFilename = `${generateUUID()}_${file.name}`;
+        if (file.name === primaryImage) {
+          uniquePrimaryImage = uniqueFilename;
+        }
         fileNames.push(uniqueFilename);
         await supabase.storage.from('images').upload(uniqueFilename, file);
       });
@@ -99,6 +109,7 @@ export default function NewProductForm(props: Props) {
       ...formData,
       images: fileNames,
       tags: tags,
+      primaryImage: uniquePrimaryImage,
     };
     const res = await axios.post('/api/products/update', {
       ...productData,
@@ -201,8 +212,15 @@ export default function NewProductForm(props: Props) {
           />
         </div>
         <ProductTags tags={tags} setTags={setTags} />
-        {props.images && <FileViewer files={props.images} />}
-        <FileUploader files={files} setFiles={setFiles} />
+        {props.images && (
+          <FileViewer files={props.images} primaryImage={primaryImage} />
+        )}
+        <FileUploader
+          files={files}
+          setFiles={setFiles}
+          primaryImage={primaryImage}
+          setPrimaryImage={setPrimaryImage}
+        />
         <Button className="w-fit">
           {props.product ? 'Update Product' : 'Add Product'}
         </Button>

@@ -8,7 +8,9 @@ import { useAppDispatch } from '~/hooks/redux';
 import { prisma } from '~/server/db';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FlatProductsWithTagsAndImages } from '~/components/ProductsTable/columns';
+import createFlatProductsObject, {
+  FlatProductsWithTagsAndImages,
+} from '~/utils/createFlatProductObject';
 
 export const getServerSideProps: GetServerSideProps<{
   data: FlatProductsWithTagsAndImages[];
@@ -19,21 +21,7 @@ export const getServerSideProps: GetServerSideProps<{
     orderBy: { featuredIndex: 'asc' },
   });
 
-  const flatProducts: FlatProductsWithTagsAndImages[] = products.map(
-    product => {
-      return {
-        id: product.id,
-        price: parseFloat(product.price),
-        shortDescription: product.shortDescription,
-        status: product.status,
-        title: product.title,
-        isFeatured: product.isFeatured,
-        featuredIndex: product.featuredIndex,
-        tags: product.tags.map(tag => tag.tag.tagName),
-        images: product.images,
-      };
-    },
-  );
+  const flatProducts = createFlatProductsObject(products);
   return {
     props: {
       data: flatProducts,

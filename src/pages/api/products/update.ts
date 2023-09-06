@@ -15,6 +15,7 @@ export default async function handler(
       if (data.isFeatured && data.featuredIndex === undefined) {
         data.featuredIndex = numberOfFeaturedProducts + 1;
       }
+
       const product = await prisma.product.update({
         where: { id: data.id },
         data: {
@@ -29,6 +30,8 @@ export default async function handler(
             create: data.images.map(image => {
               return {
                 image: image,
+                isPrimaryImage:
+                  data.primaryImage && data.primaryImage === image,
               };
             }),
           },

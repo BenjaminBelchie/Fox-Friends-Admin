@@ -1,11 +1,13 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AppDispatch, RootState } from '~/redux/store';
-import { ProductWithTagsAndImages } from '~/types/Product';
 import { ThunkAction } from '~/types/thunkAction';
+import createFlatProductsObject, {
+  FlatProductsWithTagsAndImages,
+} from '~/utils/createFlatProductObject';
 
 interface ProductState {
-  products: ProductWithTagsAndImages[] | null;
+  products: FlatProductsWithTagsAndImages[] | null;
 }
 
 const initialState: ProductState = {
@@ -16,7 +18,10 @@ const productSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    setProducts: (state, action: PayloadAction<ProductWithTagsAndImages[]>) => {
+    setProducts: (
+      state,
+      action: PayloadAction<FlatProductsWithTagsAndImages[]>,
+    ) => {
       state.products = action.payload;
     },
   },
@@ -25,7 +30,7 @@ const productSlice = createSlice({
 export const fetchProducts =
   (): ThunkAction<void, RootState, unknown, AnyAction> => async dispatch => {
     const res = await axios.get('/api/products');
-    dispatch(setProducts(res.data));
+    dispatch(setProducts(createFlatProductsObject(res.data)));
   };
 
 export const findProductById = (state: ProductState, productId: string) => {
