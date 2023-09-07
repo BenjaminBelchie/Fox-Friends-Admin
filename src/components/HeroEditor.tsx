@@ -9,28 +9,48 @@ import {
 } from './ui/tooltip';
 import { useToast } from './ui/use-toast';
 import TextField from './ui/text-field';
-
-const primaryInitText = 'Artisanal Crochet Goods';
-const secondaryInitText = 'Handmade to Order in the UK';
+import { useAppDispatch, useAppSelector } from '~/hooks/redux';
+import axios from 'axios';
+import { generateUUID } from '~/utils/generateId';
+import { createClient } from '@supabase/supabase-js';
+import { env } from '~/env.mjs';
+import { supabaseProductImagePrefix } from '~/constants/imagePrefixes';
+import { setHeroData } from '~/redux/reducers/global/globalSlice';
 
 export default function HeroEditor() {
   const [file, setFile] = useState<File | null>(null);
-  const [primaryHeroText, setPrimaryHeroText] = useState(primaryInitText);
-  const [secondaryHeroText, setSecondaryHeroText] = useState(secondaryInitText);
+  const heroData = useAppSelector(state => state.globalSlice.heroData);
+  const [primaryHeroText, setPrimaryHeroText] = useState('');
+  const [secondaryHeroText, setSecondaryHeroText] = useState('');
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
+
+  const supabase = createClient(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY,
+  );
+
+  useEffect(() => {
+    if (heroData) {
+      setPrimaryHeroText(heroData.primaryHeroText);
+      setSecondaryHeroText(heroData.secondaryHeroText);
+    }
+  }, [heroData]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files[0]);
   };
 
   const hasHeroTextChanged = () => {
-    if (
-      primaryHeroText !== primaryInitText ||
-      secondaryHeroText !== secondaryInitText
-    ) {
-      return true;
-    } else {
-      return false;
+    if (heroData) {
+      if (
+        primaryHeroText !== heroData.primaryHeroText ||
+        secondaryHeroText !== heroData.secondaryHeroText
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     }
   };
   useEffect(() => {
@@ -44,21 +64,50 @@ export default function HeroEditor() {
         You can change your hero image by just droping a new one here. It is
         like 95% accurate positioning to the hero on the main website.
       </p>
-      {file ? (
+      {file || (heroData && heroData.heroImage) ? (
         <div
           className=" h-[401px] w-full bg-cover bg-center p-4"
           style={{
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(${URL.createObjectURL(
-              file,
-            )})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url(${
+              file
+                ? URL.createObjectURL(file)
+                : supabaseProductImagePrefix + heroData.heroImage
+            })`,
           }}>
           <div className=" flex justify-between">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {
+                    onClick={async () => {
                       setFile(null);
+                      if (heroData && heroData.heroImage) {
+                        try {
+                          await supabase.storage
+                            .from('images')
+                            .remove([heroData.heroImage]);
+                          const config = await axios.post(
+                            '/api/hero/image/add',
+                            {
+                              image: '',
+                              id: heroData.id,
+                            },
+                          );
+                          dispatch(setHeroData(config.data));
+                          toast({
+                            title: 'Removed ✔',
+                            description: 'Hero image removed successfully',
+                            variant: 'success',
+                          });
+                          dispatch(setHeroData(config.data));
+                        } catch (err) {
+                          toast({
+                            title: 'Unable to remove image',
+                            description: err.message,
+                            variant: 'destructive',
+                          });
+                        }
+                      }
                     }}
                     className="bg-red-500 hover:bg-red-400"
                     size="icon">
@@ -70,28 +119,51 @@ export default function HeroEditor() {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    onClick={() => {
-                      setFile(null);
-                      toast({
-                        title: 'Saved ✔',
-                        description: 'Hero image updated successfully',
-                        variant: 'success',
-                      });
-                    }}
-                    className="bg-green-600 hover:bg-green-500"
-                    size="icon">
-                    <Check className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent align="end">
-                  <p>Save Image</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            {heroData?.heroImage === '' && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={async () => {
+                        try {
+                          let uniqueFilename = `${generateUUID()}_${file.name}`;
+                          await supabase.storage
+                            .from('images')
+                            .upload(uniqueFilename, file);
+                          const config = await axios.post(
+                            '/api/hero/image/add',
+                            {
+                              image: uniqueFilename,
+                              id: heroData.id,
+                            },
+                          );
+                          dispatch(setHeroData(config.data));
+                          setFile(null);
+                          toast({
+                            title: 'Saved ✔',
+                            description: 'Hero image updated successfully',
+                            variant: 'success',
+                          });
+                        } catch (err) {
+                          setFile(null);
+                          toast({
+                            title: 'Unable to save image',
+                            description: err.message,
+                            variant: 'destructive',
+                          });
+                        }
+                      }}
+                      className="bg-green-600 hover:bg-green-500"
+                      size="icon">
+                      <Check className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent align="end">
+                    <p>Save Image</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
           </div>
           <div className="flex h-full w-full  flex-col justify-center">
             <div className="flex -translate-y-16 flex-col items-center">
@@ -160,7 +232,44 @@ export default function HeroEditor() {
           lableText="Secondary Text"
         />
         {hasHeroTextChanged() && (
-          <Button className="w-fit">Save Hero Text</Button>
+          <div className="flex gap-2">
+            <Button
+              className="w-fit"
+              onClick={async () => {
+                try {
+                  const config = await axios.post('/api/hero/update', {
+                    id: heroData.id,
+                    heroImage: heroData.heroImage,
+                    primaryHeroText: primaryHeroText,
+                    secondaryHeroText: secondaryHeroText,
+                  });
+                  dispatch(setHeroData(config.data));
+                  toast({
+                    title: 'Hero text updated successfully ✔',
+                    variant: 'success',
+                  });
+                } catch (err) {
+                  toast({
+                    title: 'Unable to update hero text',
+                    description: err.message,
+                    variant: 'destructive',
+                  });
+                }
+              }}>
+              Save Hero Text
+            </Button>
+            <Button
+              variant="outline"
+              className="w-fit"
+              onClick={() => {
+                if (heroData) {
+                  setPrimaryHeroText(heroData.primaryHeroText);
+                  setSecondaryHeroText(heroData.secondaryHeroText);
+                }
+              }}>
+              Cancel
+            </Button>
+          </div>
         )}
       </div>
     </div>

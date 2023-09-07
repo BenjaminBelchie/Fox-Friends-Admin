@@ -11,6 +11,7 @@ import Link from 'next/link';
 import createFlatProductsObject, {
   FlatProductsWithTagsAndImages,
 } from '~/utils/createFlatProductObject';
+import { fetchHeroData } from '~/redux/reducers/global/globalSlice';
 
 export const getServerSideProps: GetServerSideProps<{
   data: FlatProductsWithTagsAndImages[];
@@ -36,6 +37,7 @@ export default function Home({
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchHeroData());
   }, []);
 
   return (
