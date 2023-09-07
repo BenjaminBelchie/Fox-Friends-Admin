@@ -1,4 +1,6 @@
+import { SiteConfig } from '@prisma/client';
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { AppDispatch, RootState } from '~/redux/store';
 import { ThunkAction } from '~/types/thunkAction';
 import { FlatProductsWithTagsAndImages } from '~/utils/createFlatProductObject';
@@ -6,11 +8,13 @@ import { FlatProductsWithTagsAndImages } from '~/utils/createFlatProductObject';
 interface GlobalState {
   isEditingFeaturedProducts: boolean;
   featuredCards: FlatProductsWithTagsAndImages[] | [];
+  heroData: SiteConfig;
 }
 
 const initialState: GlobalState = {
   isEditingFeaturedProducts: false,
   featuredCards: [],
+  heroData: null,
 };
 
 const globalSlice = createSlice({
@@ -25,6 +29,9 @@ const globalSlice = createSlice({
       action: PayloadAction<FlatProductsWithTagsAndImages[]>,
     ) => {
       state.featuredCards = action.payload;
+    },
+    setHeroData: (state, action: PayloadAction<SiteConfig>) => {
+      state.heroData = action.payload;
     },
   },
 });
@@ -43,7 +50,16 @@ export const setFeaturedCards =
     dispatch(featuredProductsChanged(cards));
   };
 
-export const { editingFeaturedProductsChanged, featuredProductsChanged } =
-  globalSlice.actions;
+export const fetchHeroData =
+  (): ThunkAction<void, RootState, unknown, AnyAction> => async dispatch => {
+    const res = await axios.get('/api/hero/update');
+    dispatch(setHeroData(res.data));
+  };
+
+export const {
+  editingFeaturedProductsChanged,
+  featuredProductsChanged,
+  setHeroData,
+} = globalSlice.actions;
 
 export default globalSlice.reducer;

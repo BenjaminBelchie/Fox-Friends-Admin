@@ -150,7 +150,7 @@ const products: Prisma.ProductCreateArgs[] = [
 
 const siteConfig: Prisma.SiteConfigCreateArgs = {
   data: {
-    heroImage: '/testProduct.jpg',
+    heroImage: 'hero.jpg',
     primaryHeroText: 'Artisanal Crochet Goods',
     secondaryHeroText: 'Handmade to Order in the UK',
   },
