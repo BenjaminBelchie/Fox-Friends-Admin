@@ -26,6 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: z.string().min(1),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
     NEXT_PUBLIC_SUPABASE_SERVICE_KEY: z.string().min(1),
+    NEXT_PUBLIC_SUPABASE_BUCKET_PREFIX: z.string().min(1),
   },
 
   /**
@@ -44,6 +45,8 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_SUPABASE_SERVICE_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY,
+    NEXT_PUBLIC_SUPABASE_BUCKET_PREFIX:
+      process.env.NEXT_PUBLIC_SUPABASE_BUCKET_PREFIX,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
