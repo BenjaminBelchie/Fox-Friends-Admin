@@ -20,8 +20,6 @@ export default function FileUploader({
   setFiles,
   setPrimaryImage,
 }: Props) {
-  // State to show the primary image, string is image name
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFiles(Array.from(e.target.files));
   };
