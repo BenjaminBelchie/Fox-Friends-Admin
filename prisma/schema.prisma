@@ -53,7 +53,7 @@ model Tag {
 
 model SiteConfig {
     id Int @id @default(autoincrement())
-    heroImage String
+    heroImage String @default("hero.jpg")
     primaryHeroText String
     secondaryHeroText String
 }
