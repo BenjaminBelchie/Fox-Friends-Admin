@@ -52,6 +52,7 @@ export default function HeroEditor() {
         return false;
       }
     }
+    return true;
   };
   useEffect(() => {
     hasHeroTextChanged();
