@@ -84,9 +84,12 @@ export default function HeroEditor() {
                       setFile(null);
                       if (heroData && heroData.heroImage) {
                         try {
-                          await supabase.storage
-                            .from('images')
-                            .remove([heroData.heroImage]);
+                          if (heroData.heroImage !== 'hero.jpg') {
+                            await supabase.storage
+                              .from('images')
+                              .remove([heroData.heroImage]);
+                          }
+
                           const config = await axios.post(
                             '/api/hero/image/add',
                             {

@@ -18,7 +18,10 @@ const config = {
     defaultLocale: 'en',
   },
   images: {
-    domains: ['sqssyktlwgetfnlmemjw.supabase.co'],
+    domains: [
+      'sqssyktlwgetfnlmemjw.supabase.co',
+      'gsdqcjtotybgudvdlkvd.supabase.co',
+    ],
   },
 };
 
