@@ -14,6 +14,7 @@ import { Status } from '@prisma/client';
 import { ProductFiltersWithValues } from '~/types/Product';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { Badge } from './ui/badge';
 
 type Props = {
   initalFilters: ProductFiltersWithValues[];
@@ -130,11 +131,18 @@ export default function FilterEditor({ initalFilters }: Props) {
                         const res = await axios.post('/api/filters/remove', {
                           id: filter.id,
                         });
-                        router.replace(router.asPath);
                         setFilters(res.data);
                       }}
                     />
                     {filter.filterType}
+                    <Badge
+                      className={`${
+                        filter.staus === 'ACTIVE'
+                          ? 'bg-green-400 hover:bg-green-500'
+                          : 'bg-orange-400 hover:bg-orange-500'
+                      }`}>
+                      {filter.staus === 'ACTIVE' ? 'Active' : 'Draft'}
+                    </Badge>
                   </div>
                 </AccordionTrigger>
                 {filter.productFilterValues.map((value, index) => (
@@ -155,7 +163,7 @@ export default function FilterEditor({ initalFilters }: Props) {
             <p>Use the New Filter form to add new filters.</p>
           </div>
         )}
-        {initalFilters.length !== filters.length && (
+        {filters.filter(filter => filter.staus === 'DRAFT').length > 0 && (
           <div className="flex gap-2">
             <Button
               onClick={async () => {
@@ -165,7 +173,6 @@ export default function FilterEditor({ initalFilters }: Props) {
                   ),
                 });
                 setFilters(res.data);
-                router.replace(router.asPath);
               }}>
               Save
             </Button>

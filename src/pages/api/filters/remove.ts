@@ -13,7 +13,6 @@ export default async function handler(
       });
       const productFilters = await prisma.productFilters.findMany({
         include: { productFilterValues: true },
-        where: { staus: 'ACTIVE' },
       });
       res.status(200).json(productFilters);
     } catch (err) {
