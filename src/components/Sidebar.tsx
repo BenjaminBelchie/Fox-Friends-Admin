@@ -6,12 +6,13 @@ import {
   LogoutIcon,
 } from '~/constants/icons';
 import Link from 'next/link';
+import { env } from '~/env.mjs';
 
 export default function Sidebar() {
   return (
     <div
       className={
-        'fixed flex h-screen w-72 flex-col overflow-x-hidden bg-gray-800 p-3 shadow duration-300'
+        'fixed flex h-screen w-72 flex-col justify-between overflow-x-hidden bg-gray-800 p-3 shadow duration-300'
       }>
       <div className="space-y-3">
         <div className="ml-2 flex items-center gap-3">
@@ -67,6 +68,17 @@ export default function Sidebar() {
               </Link>
             </li>
           </ul>
+        </div>
+      </div>
+      <div className="mb-2">
+        <div className="w-fit rounded-xl bg-white px-3 py-2">
+          <p className="text-sm font-semibold">
+            {env.NEXT_PUBLIC_HOST.toLocaleLowerCase().includes('preview')
+              ? 'Preview Environment'
+              : env.NEXT_PUBLIC_HOST.toLocaleLowerCase().includes('local')
+              ? 'Local Environment'
+              : 'Production Environment'}
+          </p>
         </div>
       </div>
     </div>
