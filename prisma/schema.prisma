@@ -58,6 +58,19 @@ model SiteConfig {
     secondaryHeroText String
 }
 
+model ProductFilters {
+    id String @id @default(uuid()) @db.Uuid
+    filterType String
+    productFilterValues ProductFilterValues[]
+}
+
+model ProductFilterValues {
+    id String @id @default(uuid()) @db.Uuid
+    value String
+    productFilter ProductFilters @relation(fields: [productFilterId], references: [id], onDelete: Cascade)
+    productFilterId String @db.Uuid
+}
+
 enum Status {
     ACTIVE
     ARCHIVED
