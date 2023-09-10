@@ -56,7 +56,7 @@ export default function Sidebar() {
                 href="/settings"
                 className="flex items-center space-x-3 rounded-md p-2">
                 <SettingsIcon />
-                <span className="text-gray-100">Settings</span>
+                <span className="text-gray-100">Site Settings</span>
               </Link>
             </li>
             <li className="rounded-sm">
