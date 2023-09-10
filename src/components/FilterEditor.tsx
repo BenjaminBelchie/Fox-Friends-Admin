@@ -49,6 +49,7 @@ export default function FilterEditor({ initalFilters }: Props) {
     setFilters(res.data);
     reset();
   };
+
   return (
     <div className="mt-3 flex flex-col gap-8">
       <div className="rounded-2xl bg-gray-50 p-4 shadow-lg">
@@ -78,27 +79,29 @@ export default function FilterEditor({ initalFilters }: Props) {
               }}
             />
           </div>
-          {fields.map((field, index) => (
-            <div className="rounded-xl border p-4" key={field.id}>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  className={`w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900`}
-                  placeholder="Brown"
-                  {...register(`productFilterValues.${index}.value`, {
-                    required: true,
-                  })}
-                  required
-                />
-                <X
-                  className="cursor-pointer text-red-600"
-                  onClick={() => {
-                    remove(index);
-                  }}
-                />
-              </div>
+          {fields && fields.length > 0 && (
+            <div className="flex flex-col gap-4 rounded-xl border p-4">
+              {fields.map((field, index) => (
+                <div className="flex items-center gap-2" key={field.id}>
+                  <input
+                    type="text"
+                    className={`w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900`}
+                    placeholder="Brown"
+                    {...register(`productFilterValues.${index}.value`, {
+                      required: true,
+                    })}
+                    required
+                  />
+                  <X
+                    className="cursor-pointer text-red-600"
+                    onClick={() => {
+                      remove(index);
+                    }}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
           <Button
             type="submit"
             className="w-fit"
