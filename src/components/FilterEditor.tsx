@@ -10,19 +10,18 @@ import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import axios from 'axios';
-
-type filtersState = {
-  filterType: string;
-  id: string;
-  productFilterValues: { value: string }[];
-}[];
+import { Status } from '@prisma/client';
+import { ProductFiltersWithValues } from '~/types/Product';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 type Props = {
-  initalFilters: filtersState;
+  initalFilters: ProductFiltersWithValues[];
 };
 
 export default function FilterEditor({ initalFilters }: Props) {
-  const [filters, setFilters] = useState<filtersState>(initalFilters);
+  const [filters, setFilters] =
+    useState<ProductFiltersWithValues[]>(initalFilters);
   const {
     register,
     handleSubmit,
@@ -38,6 +37,8 @@ export default function FilterEditor({ initalFilters }: Props) {
       name: 'productFilterValues',
     },
   );
+
+  const router = useRouter();
 
   const onSubmit = async data => {
     const res = await axios.post('/api/filters/create', {
@@ -113,41 +114,61 @@ export default function FilterEditor({ initalFilters }: Props) {
 
       <div className="rounded-2xl bg-gray-50 p-4 shadow-lg">
         <p className="border-b pb-2 text-xl">Your filters</p>
-        <Accordion type="single" collapsible>
-          {filters.map((filter, index) => (
-            <AccordionItem
-              key={index}
-              value={filter.filterType}
-              className="my-4 rounded-xl bg-gray-200 px-4">
-              <AccordionTrigger className="hover:no-underline">
-                <div className="flex justify-center gap-2">
-                  <X
-                    className="text-red-600"
-                    onClick={e => {
-                      e.preventDefault();
-                      let f = filters.filter(fil => {
-                        return fil.id !== filter.id;
-                      });
-                      setFilters(f);
-                    }}
-                  />
-                  {filter.filterType}
-                </div>
-              </AccordionTrigger>
-              {filter.productFilterValues.map((value, index) => (
-                <AccordionContent key={index}>
-                  <div className="flex gap-2">
-                    <Checkbox id={value.value} />
-                    {value.value}
+        {filters.length > 0 ? (
+          <Accordion type="single" collapsible>
+            {filters.map((filter, index) => (
+              <AccordionItem
+                key={index}
+                value={filter.filterType}
+                className="my-4 rounded-xl bg-gray-200 px-4">
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex justify-center gap-2">
+                    <X
+                      className="text-red-600"
+                      onClick={async e => {
+                        e.preventDefault();
+                        const res = await axios.post('/api/filters/remove', {
+                          id: filter.id,
+                        });
+                        router.replace(router.asPath);
+                        setFilters(res.data);
+                      }}
+                    />
+                    {filter.filterType}
                   </div>
-                </AccordionContent>
-              ))}
-            </AccordionItem>
-          ))}
-        </Accordion>
-        {filters !== initalFilters && (
+                </AccordionTrigger>
+                {filter.productFilterValues.map((value, index) => (
+                  <AccordionContent key={index}>
+                    <div className="flex gap-2">
+                      <Checkbox id={value.value} />
+                      {value.value}
+                    </div>
+                  </AccordionContent>
+                ))}
+              </AccordionItem>
+            ))}
+          </Accordion>
+        ) : (
+          <div className="flex flex-col items-center">
+            <Image height={200} width={200} src="/not-found.svg" alt={''} />
+            <p>No Product Filters</p>
+            <p>Use the New Filter form to add new filters.</p>
+          </div>
+        )}
+        {initalFilters.length !== filters.length && (
           <div className="flex gap-2">
-            <Button>Save</Button>
+            <Button
+              onClick={async () => {
+                const res = await axios.post('/api/filters/save', {
+                  filters: filters.filter(
+                    filter => filter.staus === Status.DRAFT,
+                  ),
+                });
+                setFilters(res.data);
+                router.replace(router.asPath);
+              }}>
+              Save
+            </Button>
             <Button
               variant="secondary"
               onClick={() => setFilters(initalFilters)}>

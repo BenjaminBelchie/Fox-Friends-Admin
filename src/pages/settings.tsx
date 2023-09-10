@@ -2,22 +2,11 @@ import { generateUUID } from '~/utils/generateId';
 import FilterEditor from '~/components/FilterEditor';
 import { prisma } from '~/server/db';
 import { InferGetServerSidePropsType } from 'next';
-
-// const initalFilters = [
-//   {
-//     filterType: 'Size',
-//     productFilterValues: [{ value: 'xl' }, { value: 'l' }],
-//     id: generateUUID(),
-//   },
-//   {
-//     filterType: 'Colour',
-//     productFilterValues: [{ value: 'Green' }, { value: 'Red' }],
-//     id: generateUUID(),
-//   },
-// ];
+import { Status } from '@prisma/client';
 
 export async function getServerSideProps() {
   const productFilters = await prisma.productFilters.findMany({
+    where: { staus: Status.ACTIVE },
     include: { productFilterValues: true },
   });
   return {
