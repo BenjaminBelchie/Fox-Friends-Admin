@@ -51,6 +51,7 @@ const products: Prisma.ProductCreateArgs[] = [
           },
           {
             image: 'about-photo.png',
+            isPrimaryImage: true,
           },
         ],
       },
@@ -75,6 +76,7 @@ const products: Prisma.ProductCreateArgs[] = [
           },
           {
             image: 'test.png',
+            isPrimaryImage: true,
           },
           {
             image: 'about-photo.png',
@@ -106,6 +108,7 @@ const products: Prisma.ProductCreateArgs[] = [
           },
           {
             image: 'about-photo.png',
+            isPrimaryImage: true,
           },
         ],
       },
@@ -127,6 +130,7 @@ const products: Prisma.ProductCreateArgs[] = [
         create: [
           {
             image: 'hero.jpg',
+            isPrimaryImage: true,
           },
           {
             image: 'test.png',
