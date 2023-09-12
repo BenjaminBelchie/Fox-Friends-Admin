@@ -78,6 +78,13 @@ model ProductFilterValues {
     productFilterId String @db.Uuid
 }
 
+model AboutMeDetails {
+    id Int @id @default(autoincrement())
+    titleText String
+    description String
+    image String
+}
+
 enum Status {
     ACTIVE
     ARCHIVED
