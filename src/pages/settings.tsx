@@ -4,20 +4,26 @@ import { InferGetServerSidePropsType } from 'next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import Lottie from 'react-lottie-player';
 import lottieJson from '~/constants/animations/bear-animation.json';
+import CategoryEditor from '~/components/CategoryEditor';
 
 export async function getServerSideProps() {
   const productFilters = await prisma.productFilters.findMany({
     include: { productFilterValues: true },
   });
+
+  const productCategories = await prisma.productCategories.findMany();
+
   return {
     props: {
       initalFilters: productFilters,
+      initalCategories: productCategories,
     },
   };
 }
 
 export default function SettingsPage({
   initalFilters,
+  initalCategories,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <div className="flex">
@@ -26,10 +32,16 @@ export default function SettingsPage({
         <Tabs defaultValue="productFilters" className="mt-4">
           <TabsList>
             <TabsTrigger value="productFilters">Product Filters</TabsTrigger>
+            <TabsTrigger value="productCategories">
+              Product Categories
+            </TabsTrigger>
             <TabsTrigger value="aboutPage">About Page</TabsTrigger>
           </TabsList>
           <TabsContent value="productFilters">
             <FilterEditor initalFilters={initalFilters} />
+          </TabsContent>
+          <TabsContent value="productCategories">
+            <CategoryEditor initalCategories={initalCategories} />
           </TabsContent>
           <TabsContent value="aboutPage">
             <div className="flex flex-col items-center justify-center">
