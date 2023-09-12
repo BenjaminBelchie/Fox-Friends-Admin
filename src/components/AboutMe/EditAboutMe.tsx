@@ -61,9 +61,8 @@ export default function AboutMe({ aboutMeData }: Props) {
       description: 'Your About Me page has been updated successfully.',
       variant: 'success',
     });
-    reset();
-    setImage(image);
     router.replace(router.asPath);
+    setSaveDisabled(true);
   };
 
   return (
