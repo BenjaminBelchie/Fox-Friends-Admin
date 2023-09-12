@@ -5,6 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import Lottie from 'react-lottie-player';
 import lottieJson from '~/constants/animations/bear-animation.json';
 import CategoryEditor from '~/components/CategoryEditor';
+import AboutMe from '~/components/AboutMe/EditAboutMe';
+import ViewAboutMe from '~/components/AboutMe/ViewAboutMe';
+import { useState } from 'react';
+import { Button } from '~/components/ui/button';
+import { Pencil } from 'lucide-react';
 
 export async function getServerSideProps() {
   const productFilters = await prisma.productFilters.findMany({
@@ -12,11 +17,13 @@ export async function getServerSideProps() {
   });
 
   const productCategories = await prisma.productCategories.findMany();
+  const aboutMeData = await prisma.aboutMeDetails.findFirst();
 
   return {
     props: {
       initalFilters: productFilters,
       initalCategories: productCategories,
+      aboutMeData: aboutMeData,
     },
   };
 }
@@ -24,7 +31,9 @@ export async function getServerSideProps() {
 export default function SettingsPage({
   initalFilters,
   initalCategories,
+  aboutMeData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [editAboutMe, setEditAboutMe] = useState(false);
   return (
     <div className="flex">
       <div className=" w-full">
@@ -44,17 +53,20 @@ export default function SettingsPage({
             <CategoryEditor initalCategories={initalCategories} />
           </TabsContent>
           <TabsContent value="aboutPage">
-            <div className="flex flex-col items-center justify-center">
-              <Lottie
-                loop
-                animationData={lottieJson}
-                play
-                style={{ width: 150, height: 150 }}
-              />
-              <p className="text-xl font-bold">
-                This page is under construction
-              </p>
-              <p>Please enjoy this dancing bear whilst you wait.</p>
+            <div className="flex justify-between gap-2">
+              {editAboutMe ? (
+                <AboutMe aboutMeData={aboutMeData} />
+              ) : (
+                <ViewAboutMe aboutMeData={aboutMeData} />
+              )}
+              <Button
+                onClick={e => {
+                  setEditAboutMe(!editAboutMe);
+                }}
+                className="bg-yellow-500 hover:bg-yellow-400"
+                size="icon">
+                <Pencil className="h-4 w-4" />
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
