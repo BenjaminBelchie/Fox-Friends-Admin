@@ -39,8 +39,6 @@ export default function FilterEditor({ initalFilters }: Props) {
     },
   );
 
-  const router = useRouter();
-
   const onSubmit = async data => {
     const res = await axios.post('/api/filters/create', {
       filterType: data.filterType,
