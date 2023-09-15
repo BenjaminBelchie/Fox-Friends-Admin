@@ -14,6 +14,10 @@ export type ProductWithTagsAndImages = Prisma.ProductGetPayload<{
   include: { tags: { include: { tag } }; images: true };
 }>;
 
+export type ProductFiltersWithValues = Prisma.ProductFiltersGetPayload<{
+  include: { productFilterValues: true };
+}>;
+
 export type ProductWithImages = Prisma.ProductGetPayload<{
   include: { images: true };
 }>;

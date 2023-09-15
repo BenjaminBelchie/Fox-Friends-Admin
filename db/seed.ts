@@ -51,6 +51,7 @@ const products: Prisma.ProductCreateArgs[] = [
           },
           {
             image: 'about-photo.png',
+            isPrimaryImage: true,
           },
         ],
       },
@@ -75,6 +76,7 @@ const products: Prisma.ProductCreateArgs[] = [
           },
           {
             image: 'test.png',
+            isPrimaryImage: true,
           },
           {
             image: 'about-photo.png',
@@ -106,6 +108,7 @@ const products: Prisma.ProductCreateArgs[] = [
           },
           {
             image: 'about-photo.png',
+            isPrimaryImage: true,
           },
         ],
       },
@@ -127,6 +130,7 @@ const products: Prisma.ProductCreateArgs[] = [
         create: [
           {
             image: 'hero.jpg',
+            isPrimaryImage: true,
           },
           {
             image: 'test.png',
@@ -156,6 +160,15 @@ const siteConfig: Prisma.SiteConfigCreateArgs = {
   },
 };
 
+const aboutMeData: Prisma.AboutMeDetailsCreateArgs = {
+  data: {
+    titleText: "Hi, I'm Anna",
+    description:
+      "Hello, I'm Anna, the creative soul behind the crochet wonders in my cozy corner of the world. Ever since I can remember, crochet has been my greatest passion and my most cherished form of self-expression. As the years went by, I honed my skills, pushing the boundaries of what can be achieved with a simple hook and a skein of yarn. Today, my craft has evolved into something more than just a hobby; it's a labor of love that fills my days with warmth and joy.",
+    image: 'about-photo.png',
+  },
+};
+
 async function main() {
   await prisma.product.deleteMany({});
   await prisma.tag.deleteMany({});
@@ -169,6 +182,7 @@ async function main() {
     await prisma.product.create(item);
   });
   await prisma.siteConfig.create(siteConfig);
+  await prisma.aboutMeDetails.create(aboutMeData);
 }
 
 main()
